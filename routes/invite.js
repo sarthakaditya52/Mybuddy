@@ -163,7 +163,14 @@ router.get('/invite/results/:uid/:fid/:iid', (req, res) => {
                                     res.send(err);
                                 } else {
                                     if (finvite != null) {
-                                        res.render('invite/results', { invite: finvite, user: fuser, friend: ffriend });
+                                        Invite.find({userid:ffriend._id},(err,finvites)=>{
+                                            if(err){
+                                                res.send(err);
+                                            }else{
+                                                res.render('invite/results', {invites:finvites, invite: finvite, user: fuser, friend: ffriend });
+                                            }
+                                        })
+                                        
                                     } else {
                                         req.flash('error', "no such invite");
                                         res.redirect('/invite/form/' + fuser._id + '/' + ffriend._id);

@@ -6,13 +6,23 @@ const express = require("express"),
     methodOverride = require("method-override"),
     flash = require('connect-flash'),
     port=process.env.PORT||3000,
+    session =require('express-session'),
     cookieParser =require('cookie-parser'),
     dotenv=require('dotenv');
+
+// Require Routes
+var userRoutes =require('./routes/user');
+var inviteRoutes =require('./routes/invite');
 
 
 //App Config
 app.use(cookieParser('secret'));
+app.use(require("express-session")({
+    secret: "This is a marketing panel",
+    resave: false,
+    saveUninitialized: false
 
+}));
 app.use(flash());
 
 
@@ -55,3 +65,15 @@ mongoose.connect(mongoURI);
 app.get('/',(req,res)=>{
     res.render('index');
 })
+
+
+
+
+
+
+app.use('/',userRoutes);
+app.use('/',inviteRoutes);
+
+app.listen(port,()=>{
+    console.log("server started at "+port);
+});

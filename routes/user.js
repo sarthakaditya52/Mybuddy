@@ -37,7 +37,7 @@ router.post('/user/new',(req,res)=>{
 
 // @route to render form to a user
 router.get('/user/form/:id',(req,res)=>{
-    user.findOne({_id:req.params.id},(err,fuser)=>{
+    User.findOne({_id:req.params.id},(err,fuser)=>{
         if(err){
             res.send(err);
         }else{
