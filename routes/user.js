@@ -29,7 +29,7 @@ router.post('/user/new',(req,res)=>{
                 })
             }else{
                 req.flash("error","email already exists");
-                res.redirect('/');
+                res.redirect('/user/form/'+fuser_id);
             }
         }
     })

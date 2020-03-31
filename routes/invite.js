@@ -64,7 +64,7 @@ router.post('/invite/new/:fid', (req, res) => {
 
 // @route to render invite ques-ans form
 router.get('/invite/form/:uid/:fid', (req, res) => {
-    Invite.findOne({ userid: req.params.uid, friendid: req.params.fid }, (err, finvite) => {
+    Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
         if (err) {
             res.send(err);
         } else {
@@ -116,10 +116,10 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                     } else {
                         if (ffriend != null) {
                             const invite = {
-                                username: fuser.username,
-                                userid: fuser._id,
-                                friendname: ffriend.username,
-                                friendid: ffriend._id
+                                friendname: fuser.username,
+                                friendid: fuser._id,
+                                username: ffriend.username,
+                                userid: ffriend._id
                             }
                             Invite.create(invite, (err, ninvite) => {
                                 if (err) {
