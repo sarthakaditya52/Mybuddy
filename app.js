@@ -5,7 +5,7 @@ const express = require("express"),
     path = require("path"),
     methodOverride = require("method-override"),
     flash = require('connect-flash'),
-    port=process.env.PORT||3000,
+    port=process.env.PORT||5000,
     session =require('express-session'),
     cookieParser =require('cookie-parser'),
     dotenv=require('dotenv');
@@ -56,10 +56,14 @@ dotenv.config();
 const mongoURI = "mongodb://localhost/stickman_game_project";
 // const mongoURI = "mongodb+srv://"+process.env.MLAB_USER+":"+process.env.MLAB_PASS+"@cluster0-kw5s2.mongodb.net/stickman?retryWrites=true&w=majority";
 //Mongo connection
-mongoose.connect(mongoURI);
-
-
-
+mongoose
+    .connect(mongoURI, { 
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true    
+    })
+    .then(() => console.log('MongoDB Connected....'))
+    .catch(err => console.log(err));        
 
 // @HOME ROUTE
 app.get('/',(req,res)=>{
