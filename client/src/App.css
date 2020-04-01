@@ -46,7 +46,6 @@ body
 
 #question-card
 {
-    background-image: linear-gradient(-90deg, red, yellow);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     width:100%;
     padding:20px 20px 5px 20px;
@@ -154,4 +153,43 @@ input:checked {
 }
 .option_remove{
     opacity:1!important;
+}
+
+.add-button:hover{
+	background:rgba(0, 0, 0, 0.6);
+	color:#fff;
+}
+
+.theme-button-container span {
+    display: inline-block;
+    margin-top: 12px;
+    width: 35px;
+    height: 35px;
+    border-radius: 30px;
+    border: 3px solid #fff;
+}
+
+.theme-button-green
+{
+	background:linear-gradient(#f79d00, #64f38c);
+}
+
+.theme-button-voilet
+{
+	background:linear-gradient(#fc00ff, #00dbde);
+}
+
+.theme-button-indigo
+{
+	background:linear-gradient(#14a1cc, #904e95);
+}
+
+.theme-button-yellow
+{
+	background:linear-gradient(#dbe207, #db36a4);
+}
+
+.theme-button-red
+{
+	background:linear-gradient(#FF5F6D, #FFC371);
 }
