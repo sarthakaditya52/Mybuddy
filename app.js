@@ -35,9 +35,6 @@ app.use(flash());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.set("view engine", "ejs");
-app.use(methodOverride("_method"));
-app.use(express.static(__dirname+"/public"));
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
@@ -46,7 +43,14 @@ app.use(function(req, res, next){
     next();
  });
 
+// For deployment
 
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+    app.get('*', (req,res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    });
+}
 
 //---------------
 //Mongo Config
