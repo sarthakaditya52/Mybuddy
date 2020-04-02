@@ -7,7 +7,9 @@ var inviteSchema =new mongoose.Schema({
     username:String,
     friendid:String,
     friendname:String,
-    qa:[{ques:String,ans:String,correctans:String,options:[]}],
+    correctans:[],
+    ans:[],
+    score:{type:Number,default:0}
 
 
 });
