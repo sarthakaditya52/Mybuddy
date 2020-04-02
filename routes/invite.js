@@ -132,9 +132,16 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                                     res.send(err)
 
                                 } else {
-                                    // compare answers and update invite
-                                    invite.save();
-                                    res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
+                                    ninvite.ans=req.body;
+                                    for(var i=0;i<ffriend.qa.length;i++){
+                                        ninvite.correctans.push(ffriend.qa[i].ans);
+                                        if(ffriend.qa[i].ans==req.body[i]){
+                                            ninvite.score=ninvite.score+1;
+                                        }
+                                    }
+                                    ninvite.save();
+                                   
+                                    // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
                                 }
 
                             })
