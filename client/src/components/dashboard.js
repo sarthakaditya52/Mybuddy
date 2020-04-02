@@ -39,21 +39,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        let score = (
-            <tbody>
-                {
-                    this.state.scoreList.map((item, index) => (
-                        <tr key={index}>
-                            <td>name</td>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                        </tr>
-                    ))
-                }
-            </tbody>
-        )
-
         return (
             <div>
                 <div className="quizHeader">{this.state.user}</div>
@@ -109,13 +94,22 @@ class Dashboard extends Component {
                             <th>Delete</th>
                         </tr>
                     </thead>
-                    {
-                        this.state.scoreList.length !== 0
-                            ?
-                            { score }
-                            :
-                            null
-                    }
+                    <tbody>
+                        {
+                            this.state.scoreList.length !== 0
+                                ?
+                                this.state.scoreList.map((item, index) => (
+                                    <tr key={index}>
+                                        <td>name</td>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                ))
+                                :
+                                null
+                        }
+                    </tbody>
                 </Table>
                 {
                     this.state.scoreList.length === 0
