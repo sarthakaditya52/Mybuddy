@@ -2,16 +2,18 @@ import React, { Component } from 'react'
 import Question from './Question'
 import { Button } from 'reactstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 export class CreateQuiz extends Component {
     constructor(props) {
         super(props);
         const data = JSON.parse(localStorage.getItem('user'));
+        console.log(data)
         this.state = {
-          id: data.id,
-          username: data.name,
+          id: data._id,
+          username: data.username,
           email: data.email,
-          shareid: data.id,
+          shareid: data.sharelink,
           QuesA: [null,null,null,null,null,null,null,null,null,null]
         }
     }
@@ -48,8 +50,8 @@ export class CreateQuiz extends Component {
 
         // Request
         const body = JSON.stringify(user);
-        console.log(body);
         axios.post(`/user/form/${this.state.id}`,body,config);
+        this.props.history.push(`/user/share/${this.state.id}`);        
     }
 
     render() {
@@ -124,4 +126,4 @@ export class CreateQuiz extends Component {
     }
 }
 
-export default CreateQuiz;
+export default withRouter(CreateQuiz);

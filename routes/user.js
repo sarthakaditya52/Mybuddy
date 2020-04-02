@@ -69,13 +69,14 @@ router.get('/user/form/:id',(req,res)=>{
 
 // @route to post form data for a user
 router.post('/user/form/:id',(req,res)=>{
-    console.log(req.body)
+    console.log(req.params.id)
     User.findOne({_id:req.params.id},(err,fuser)=>{
         if(err){
             res.send(err);
         }else{
             if(fuser!=null){
                 fuser.qa=req.body.qa;
+                console.log(fuser)
                 fuser.save();
                 res.redirect('/user/share/'+fuser._id);
             }else{
