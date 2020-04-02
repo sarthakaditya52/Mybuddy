@@ -15,8 +15,16 @@ router.get('/invite/:fid', (req, res) => {
         if (err) {
             res.send(err);
         } else {
+
             if (fuser != null) {
-                res.json({ user: fuser });
+                if(fuser.qa==[]){
+                    req.flash("error","no quiz now");
+                    // res.redirect('/');
+                }else{
+                    // res.redirect('/invite/new/'+fuser._id);
+                    res.json({ userid: fuser._id });
+                }
+                
             } else {
                 req.flash("error", "no such game");
             }
