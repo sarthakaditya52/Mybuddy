@@ -193,3 +193,57 @@ input:checked {
 {
 	background:linear-gradient(#FF5F6D, #FFC371);
 }
+
+/* css for answer Page */
+.quizHeader {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 120%;
+    font-weight: 500;
+}
+
+.progressContainer  {
+    position: relative;
+    background-color: rgb(226, 226, 226);
+    height: 15px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgb(172, 172, 172);
+}
+
+.progressBar    {
+    position: absolute;
+    background-color: rgb(96, 170, 219);
+    height: 15px;
+    border-radius: 10px;
+    width: 0%;
+    transition: 0.3s;
+}
+
+/* styles for dashboard */
+.quizStatus {
+    font-size: 250%;
+    margin: 10px 0;
+}
+
+.linkContainer  {
+    text-align: center;
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
+
+.copyLink   {
+    background-color: rgb(58, 165, 214);
+    border: none;
+    color: #ffffff;
+    font-size: 120%;
+    cursor: pointer;
+}
+
+.copied {
+    color: red;
+    font-size: 80%;
+    font-weight: 500;
+}
