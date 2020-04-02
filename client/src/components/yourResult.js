@@ -1,20 +1,44 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
+import axios from 'axios';
 
 class YourResult extends Component {
 
     constructor(props) {
         super(props);
-        const user = JSON.parse(localStorage.getItem('user'));
+        const curUser = JSON.parse(localStorage.getItem('user'));
+        const friendsUser = JSON.parse(localStorage.getItem('refUser'));
+        const result = JSON.parse(localStorage.getItem('result'));
         this.state = {
-            user: user.username,
-            score: 5,
-            scoreList: [
-                { name: 'Parvati', score: 10 },
-                { name: 'Ritankar', score: 10 },
-                { name: 'Jassi', score: 5 }
-            ]
+            curUser: curUser,
+            friendUser: friendsUser,
+            result: result,
+            user: curUser.username,
+            score: result.score,
+            scoreList: []
         }
+    }
+
+    componentWillMount()
+    {
+        axios.get(`/invite/results/${this.state.curUser._id}/${this.state.friendUser._id}/${this.state.result._id}`)
+            .then(res => {
+                let scores = res.data.invites;
+                let newScores = [];
+                for(let i = 0; i < scores.length; i++)
+                {
+                    let score = { name: scores[i].friendname, score: scores[i].score }
+                    newScores.push(score)
+                }
+                this.setState({
+                    scoreList: newScores
+                });
+            })
+    }
+
+    onClick()
+    {
+        this.props.history.push(`/form`); 
     }
 
     render() {
@@ -40,7 +64,7 @@ class YourResult extends Component {
                 </div>
 
                 <div className="inviteText">Now, it's your turn. Create your own quiz and send it to your friends</div>
-                <div className="inviteLink">Create Your Quiz</div>
+                <div className="inviteLink" onClick={this.onClick.bind(this)}>Create Your Quiz</div>
                 <div className="scoreResultOf">Scoreboard of {this.state.user}</div>
 
                 <Table className="scoreTable">

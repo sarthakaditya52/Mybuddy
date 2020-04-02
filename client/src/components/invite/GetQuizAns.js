@@ -19,32 +19,33 @@ export class GetQuizAns extends Component {
         }
     }
     componentWillMount() {
+        console.log(this.state)
         let questionOptions =
             [
-                { ques: `Which is ${this.state.user} favourite smartphone brand?`, id: 1 },
-                { ques: `Who is ${this.state.user}'s favourite superhero`, id: 2 },
-                { ques: `How many kids does ${this.state.user} want ?`, id: 3 },
-                { ques: `What is ${this.state.user}'s dream car?`, id: 4 },
-                { ques: `What is ${this.state.user}'s favourite show?`, id: 5 },
-                { ques: `What is most important for ${this.state.user} ?`, id: 6 },
-                { ques: `What does ${this.state.user} use the most ?`, id: 7 },
-                { ques: `What type of person is ${this.state.user} ?`, id: 8 },
-                { ques: `If ${this.state.user} meets a genie, what would be ${this.state.user}'s wish ?`, id: 9 },
-                { ques: `What type of movies does ${this.state.user} like the most?`, id: 10 }
+                { ques: this.state.friendsUser.qa[0].ques, id: 1 },
+                { ques: this.state.friendsUser.qa[1].ques, id: 2 },
+                { ques: this.state.friendsUser.qa[2].ques, id: 3 },
+                { ques: this.state.friendsUser.qa[3].ques, id: 4 },
+                { ques: this.state.friendsUser.qa[4].ques, id: 5 },
+                { ques: this.state.friendsUser.qa[5].ques, id: 6 },
+                { ques: this.state.friendsUser.qa[6].ques, id: 7 },
+                { ques: this.state.friendsUser.qa[7].ques, id: 8 },
+                { ques: this.state.friendsUser.qa[8].ques, id: 9 },
+                { ques: this.state.friendsUser.qa[9].ques, id: 10 }
             ];
 
         let answerOptions =
             [
-                { id: 1, options: [{ key: 0, option: 'Apple' }, { key: 1, option: 'Nokia' }, { key: 2, option: 'Oneplus' }, { key: 3, option: 'Samsung' }] },
-                { id: 2, options: [{ key: 0, option: 'Batman' }, { key: 1, option: 'Thor' }, { key: 2, option: 'Spider-Man' }, { key: 3, option: 'Iron Man' }, { key: 4, option: 'Aquaman' }] },
-                { id: 3, options: [{ key: 0, option: 'None' }, { key: 1, option: 'One' }, { key: 2, option: 'Two' }, { key: 3, option: 'Three' }, { key: 4, option: 'I want to adopt kids' }] },
-                { id: 4, options: [{ key: 0, option: 'Audi' }, { key: 1, option: 'Jaguar' }, { key: 2, option: 'BMW' }, { key: 3, option: 'Lamborghini' }] },
-                { id: 5, options: [{ key: 0, option: 'Prison Break' }, { key: 1, option: 'Breaking Bad' }, { key: 2, option: 'Game of Thrones' }, { key: 3, option: 'Friends' }] },
-                { id: 6, options: [{ key: 0, option: 'Money' }, { key: 1, option: 'Love' }, { key: 2, option: 'Friends & Family' }, { key: 3, option: 'Career' }] },
-                { id: 7, options: [{ key: 0, option: 'Whatsapp' }, { key: 1, option: 'Facebook' }, { key: 2, option: 'Instagram' }, { key: 3, option: 'Reddit' }] },
-                { id: 8, options: [{ key: 0, option: 'Funny' }, { key: 1, option: 'Cool' }, { key: 2, option: 'Calm' }, { key: 3, option: 'Impatient' }] },
-                { id: 9, options: [{ key: 0, option: 'Loads of Money' }, { key: 1, option: 'Perfect life partner' }, { key: 2, option: 'Perfect job' }, { key: 3, option: 'A huge house' }] },
-                { id: 10, options: [{ key: 0, option: 'Action' }, { key: 1, option: 'Thriller' }, { key: 2, option: 'Comedy' }, { key: 3, option: 'Horror' }, { key: 4, option: 'Drama' }, { key: 5, option: 'Sci-Fi' }, { key: 6, option: 'Romance' }] },
+                { id: 1, options: this.state.friendsUser.qa[0].options },
+                { id: 2, options: this.state.friendsUser.qa[1].options },
+                { id: 3, options: this.state.friendsUser.qa[2].options },
+                { id: 4, options: this.state.friendsUser.qa[3].options },
+                { id: 5, options: this.state.friendsUser.qa[4].options },
+                { id: 6, options: this.state.friendsUser.qa[5].options },
+                { id: 7, options: this.state.friendsUser.qa[6].options },
+                { id: 8, options: this.state.friendsUser.qa[7].options },
+                { id: 9, options: this.state.friendsUser.qa[8].options },
+                { id: 10, options: this.state.friendsUser.qa[9].options }
             ];
 
         this.setState({
@@ -60,11 +61,14 @@ export class GetQuizAns extends Component {
             let answer = this.state.answerOptions[index].options[event.target.getAttribute("index")].option;
             let answers = [...this.state.answers, answer];
             index += 1;
+            let counter = index;
+            if (index === 10)
+                index = index - 1;
             this.setState({
                 index,
                 answers
             });
-            if(index === 10)
+            if(counter === 10)
             {
                 // Header
                 const config = {
@@ -75,15 +79,24 @@ export class GetQuizAns extends Component {
   
                 // Request
                 const body = JSON.stringify(this.state.answers);
-                axios.post(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`, body, config);
+                axios.post(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`, body, config)
+                    .then(res => {
+                        var invresult = res.data.iid;
+                        localStorage.setItem('result', JSON.stringify(invresult));
+                        this.props.history.push(`/invite/results/${this.state.curUser._id}/${this.state.friendsUser._id}/${invresult._id}`); 
+                    })
             }
         }
     }
 
-    componentDidUpdate()
+    shouldComponentUpdate()
     {
-        //console.log(this.state);
+        if(this.state.index < 10)
+            return true
+        else
+            return false
     }
+
     render() {
         return (
             <div>

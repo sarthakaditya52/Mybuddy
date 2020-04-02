@@ -134,7 +134,6 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
 
 // @post route to submit and compare invite form q-a
 router.post('/invite/form/:uid/:fid', (req, res) => {
-    console.log(req.body)
     User.findOne({ _id: req.params.uid }, (err, fuser) => {
         if (err) {
             res.send(err);
@@ -166,7 +165,10 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                                     ninvite.save();
 
                                     // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
-                                    res.json({ uid: fuser._id, fid: ffriend._id, iid: ninvite._id })
+                                    //res.json({ uid: fuser._id, fid: ffriend._id, iid: ninvite._id })
+                                    res.json({
+                                        iid: ninvite
+                                    });
                                 }
 
                             })
@@ -233,13 +235,5 @@ router.get('/invite/results/:uid/:fid/:iid', (req, res) => {
         }
     })
 })
-
-
-
-
-
-
-
-
 
 module.exports = router;
