@@ -79,7 +79,7 @@ router.post('/user/form/:id',(req,res)=>{
             res.send(err);
         }else{
             if(fuser!=null){
-                // Update user with form values
+                fuser.qa=req.body.qa;
                 fuser.save();
                 res.redirect('/user/share/'+fuser._id);
             }else{
