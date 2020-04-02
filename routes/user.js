@@ -27,6 +27,7 @@ router.post('/user/new',(req,res)=>{
                     if(err){
                         res.send(err);
                     }else{
+                        sharelink="/invite/"+nuser._id;
                         res.json({
                             user: nuser,
                             newU: true
