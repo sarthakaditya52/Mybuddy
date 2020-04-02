@@ -8,6 +8,7 @@ import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
 import Dashboard from './components/Dashboard';
+import YourResult from './components/YourResult';
 
 export class App extends Component {
   constructor(props) {
@@ -80,6 +81,8 @@ export class App extends Component {
           <Route exact path="/invite/:id" component={this.LoginNewPage} />
           <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
           <Route exact path="/user/share/:id" component={Dashboard} />
+          <Route exact path="/invite/results/:uid/:fid/:iid" component={YourResult} />
+          {/* <YourResult /> */}
        </div>
      </Switch>
     )

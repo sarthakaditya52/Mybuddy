@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { Table } from 'reactstrap';
 
 
 export class LoginNew extends Component {
@@ -11,7 +12,12 @@ export class LoginNew extends Component {
         this.state={
             refId: data,
             name: '',
-            email: ''
+            email: '',
+            scoreList: [
+                { name: 'Parvati', score: 10 },
+                { name: 'Ritankar', score: 10 },
+                { name: 'Jassi', score: 5 }
+            ]
         }
         axios.get(`/invite/${data}`)
             .then(res => {
@@ -83,6 +89,38 @@ export class LoginNew extends Component {
                                 </FormGroup>
                             </Form>
                         </div>
+                        <div className="scoreResultOf">Scoreboard</div>
+
+                        <Table className="scoreTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody className="resultTable">
+                                {
+                                    this.state.scoreList.length !== 0
+                                        ?
+                                        this.state.scoreList.map((item, index) => (
+                                            <tr key={index}>
+                                                <td>{item.name}</td>
+                                                <td>{item.score}</td>
+                                            </tr>
+                                        ))
+                                        :
+                                        null
+                                }
+                            </tbody>
+                        </Table>
+                        {
+                            this.state.scoreList.length === 0
+                                ?
+                                <div className="noScore">No one has given this quiz yet.</div>
+                                :
+                                null
+                        }
+
                     </div>
                 </div>
             </div>

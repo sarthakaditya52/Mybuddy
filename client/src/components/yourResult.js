@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import { Table } from 'reactstrap';
 
 class YourResult extends Component {
-    state = {
-        user: 'Kripa',
-        score: 5,
-        scoreList: [
-            { name: 'Parvati', score: 10 },
-            { name: 'Ritankar', score: 10 },
-            { name: 'Jassi', score: 5 }
-        ]
+
+    constructor(props) {
+        super(props);
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.state = {
+            user: user.username,
+            score: 5,
+            scoreList: [
+                { name: 'Parvati', score: 10 },
+                { name: 'Ritankar', score: 10 },
+                { name: 'Jassi', score: 5 }
+            ]
+        }
     }
 
     render() {
