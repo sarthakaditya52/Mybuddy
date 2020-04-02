@@ -8,7 +8,6 @@ export class CreateQuiz extends Component {
     constructor(props) {
         super(props);
         const data = JSON.parse(localStorage.getItem('user'));
-        console.log(data)
         this.state = {
           id: data._id,
           username: data.username,
@@ -50,8 +49,12 @@ export class CreateQuiz extends Component {
 
         // Request
         const body = JSON.stringify(user);
-        axios.post(`/user/form/${this.state.id}`,body,config);
-        this.props.history.push(`/user/share/${this.state.id}`);        
+        axios.post(`/user/form/${this.state.id}`,body,config)
+          .then(res => {
+            var curUser= res.data.user;
+            localStorage.setItem('user', JSON.stringify(curUser));
+            this.props.history.push(`/user/share/${curUser._id}`);        
+          });
     }
 
     render() {

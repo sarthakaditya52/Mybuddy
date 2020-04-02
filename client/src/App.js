@@ -82,7 +82,6 @@ export class App extends Component {
           <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
           <Route exact path="/user/share/:id" component={Dashboard} />
           <Route exact path="/invite/results/:uid/:fid/:iid" component={YourResult} />
-          {/* <YourResult /> */}
        </div>
      </Switch>
     )

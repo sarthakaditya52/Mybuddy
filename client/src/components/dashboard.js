@@ -9,7 +9,7 @@ import lineIcon from '../asserts/icons/line-brands.svg';
 import talkIcon from '../asserts/icons/sms-solid.svg';
 import vkIcon from '../asserts/icons/vk-brands.svg';
 import { Table } from 'reactstrap';
-
+import axios from 'axios';
 
 class Dashboard extends Component {
 
@@ -17,7 +17,7 @@ class Dashboard extends Component {
         super(props);
         const user = JSON.parse(localStorage.getItem('user'));
         this.state = {
-            user: user.username,
+            user: user,
             link: user.sharelink,
             copyStatus: false,
             scoreList: []
@@ -38,10 +38,20 @@ class Dashboard extends Component {
         })
     }
 
+    componentDidMount()
+    {
+        axios.get(`/user/share/${this.state.user._id}`)
+            .then(res => {
+                this.setState({
+                    scoreList: res.data.invites
+                })
+            })
+    }
+
     render() {
         return (
             <div>
-                <div className="quizHeader">{this.state.user}</div>
+                <div className="quizHeader">{this.state.user.username}</div>
                 <div className="quizHeader quizStatus">Your Quiz is Ready!</div>
                 <div>Now share your quiz-link with your friends!</div>
                 <div>They will try to guess your answers & get a score out of 10.</div>
@@ -83,7 +93,7 @@ class Dashboard extends Component {
                     <div onClick={() => window.open("https://www.vk.com", '_blank')} className="col socialLink bg-violet"><img src={vkIcon} alt="icon" height="30" /> Share</div>
                 </div>
 
-                <div className="quizHeader scoreStatus">Scoreboard of {this.state.user}</div>
+                <div className="quizHeader scoreStatus">Scoreboard of {this.state.user.username}</div>
 
                 <Table className="scoreTable">
                     <thead>
