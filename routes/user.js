@@ -54,14 +54,16 @@ router.get('/user/form/:id',(req,res)=>{
         }else{
             if(fuser!=null){
                 if(fuser.qa==[]){
-                    res.render('user/form',{id:fuser._id});
+                    // res.render('user/form',{id:fuser._id});
+                    res.json({user:fuser});
                 }else{
-                    res.redirect('/user/share/'+fuser._id);
+                    // res.redirect('/user/share/'+fuser._id);
+                    res.json({userid:fuser._id});
                 }
                 
             }else{
                 req.flash("error","please enter details");
-                res.redirect('/');
+                // res.redirect('/');
             }
         }
     })
@@ -78,9 +80,10 @@ router.post('/user/form/:id',(req,res)=>{
                 fuser.qa=req.body.qa;
                 console.log(fuser)
                 fuser.save();
-                res.redirect('/user/share/'+fuser._id);
+                // res.redirect('/user/share/'+fuser._id);
+                res.json({userid:fuser._id});
             }else{
-                res.redirect('/');
+                // res.redirect('/');
             }
         }
     })
@@ -97,9 +100,13 @@ router.get('/user/share/:id',(req,res)=>{
                     if(err){
                         res.send(err);
                     }else{
+                        res.json({invites:finvites,user:fuser})
                         // res.render('share page')
                     }
                 })
+            }else{
+                // res.redirect('/');
+                
             }
         }
     })
@@ -117,7 +124,8 @@ router.post('/user/delete/:id',(req,res)=>{
                 if(err){
                     res.send(err);
                 }else{
-                    res.redirect('/user/form/'+fuser._id);
+                    // res.redirect('/user/form/'+fuser._id);
+                    res.json({userid:fuser._id})
                 }
             })
         }
@@ -130,7 +138,8 @@ router.post('/user/delete/invite/:inviteid/:uid',(req,res)=>{
         if(err){
             res.send(err);
         }else{
-            res.redirect('/user/share/'+req.params.uid);
+            // res.redirect('/user/share/'+req.params.uid);
+            res.json({userid:req.params.uid})
         }
     })
 })
