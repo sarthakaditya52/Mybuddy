@@ -28,9 +28,7 @@ router.post('/user/new',(req,res)=>{
                         res.send(err);
                     }else{
                         res.json({
-                            id: nuser._id,
-                            name: nuser.username,
-                            email: nuser.email,
+                            user: nuser,
                             newU: true
                         });
                     }
@@ -40,9 +38,7 @@ router.post('/user/new',(req,res)=>{
                 if(fuser.qa.length < 1)
                     status = true;
                 res.json({
-                    id: fuser._id,
-                    name: fuser.username,
-                    email: fuser.email,
+                    user: fuser,
                     newU: status
                 });
             }

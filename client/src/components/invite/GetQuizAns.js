@@ -11,7 +11,7 @@ export class GetQuizAns extends Component {
             curUser: curUser,
             friendsUser: friendsUser,
             Style: { background: 'linear-gradient(#FF5F6D, #FFC371)' },
-            user: curUser.name,
+            user: curUser.username,
             index: 0,
             questionOptions: [],
             answerOptions: [],

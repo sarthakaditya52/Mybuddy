@@ -12,11 +12,16 @@ import { Table } from 'reactstrap';
 
 
 class Dashboard extends Component {
-    state = {
-        user: "Kripa",
-        link: "https://dummy.com/dummyLink",
-        copyStatus: false,
-        scoreList: []
+
+    constructor(props) {
+        super(props);
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.state = {
+            user: user.username,
+            link: user.sharelink,
+            copyStatus: false,
+            scoreList: []
+        }
     }
 
     textCopyHandler = () => {

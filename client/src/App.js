@@ -7,6 +7,7 @@ import { Route, Switch, withRouter, useParams } from 'react-router-dom';
 import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
+import Dashboard from './components/Dashboard';
 
 export class App extends Component {
   constructor(props) {
@@ -22,24 +23,20 @@ export class App extends Component {
   {
     // console.log(id)
     this.setState({
-      userId: userdata.id,
-      username: userdata.username,
-      email: userdata.email,
+      userId: userdata.user._id,
+      username: userdata.user.username,
+      email: userdata.user.email,
       newU: userdata.newU
     });
     if(this.state.userId)
     {
-      const user = {
-        name: this.state.username,
-        id: this.state.userId,
-        email: this.state.email
-      }
-
-      localStorage.setItem('user', JSON.stringify(user));
+      var localUser = userdata.user;
+      console.log(localUser)
+      localStorage.setItem('user', JSON.stringify(localUser));
       if(this.state.newU)
         this.props.history.push(`/form`);
       else  
-        this.props.history.push(`/form/${this.state.userId}`)
+        this.props.history.push(`/user/share/${this.state.userId}`)
     }
 
   }
@@ -82,6 +79,7 @@ export class App extends Component {
           <Route exact path="/form" component={this.CreateQuizPage} />
           <Route exact path="/invite/:id" component={this.LoginNewPage} />
           <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
+          <Route exact path="/user/share/:id" component={Dashboard} />
        </div>
      </Switch>
     )
