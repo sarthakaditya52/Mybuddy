@@ -247,3 +247,97 @@ input:checked {
     font-size: 80%;
     font-weight: 500;
 }
+
+.socialLink {
+    text-align: center;
+    border: 1px solid #000000;
+    width: 94%;
+    margin: 1%;
+    padding: 2%;
+    border-radius: 3px;
+    font-weight: 500;
+    color: white;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.bg-green   {
+    background-color: rgb(37, 228, 123);
+}
+
+.bg-blue   {
+    background-color: rgb(68, 87, 173);
+}
+
+.bg-yellow   {
+    background-color: rgb(255, 251, 0);
+}
+
+.bg-deepBlue   {
+    background-color: rgb(73, 70, 250);
+}
+
+.bg-lightBlue   {
+    background-color: rgb(118, 200, 233);
+}
+
+.bg-deepGreen   {
+    background-color: rgb(53, 219, 61);
+}
+
+.bg-insta   {
+    background-image: linear-gradient(to right, rgb(255, 102, 0), rgb(163, 33, 98));
+}
+
+.bg-deepYellow   {
+    background-color: rgb(226, 223, 34);
+}
+
+.bg-violet   {
+    background-color: rgb(143, 142, 230);
+}
+
+.socialLink:hover {
+    background-color: rgb(58, 165, 214);
+    border: 1px solid rgb(58, 165, 214);
+}
+
+.socialLink > img:hover {
+    height: 40px;
+}
+
+.bg-insta:hover {
+    background-image: linear-gradient(to right, rgb(58, 165, 214), rgb(58, 165, 214));
+}
+
+.scoreStatus    {
+    font-size: 150%;
+}
+
+.scoreTable > thead > tr > th    {
+    text-align: center;
+}
+
+.scoreTable > tbody > tr > td   {
+    text-align: center;
+}
+
+.noScore    {
+    color: red;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+    border: 1px solid black;
+    border-radius: 50px;
+}
+
+.newQuiz    {
+    text-align: center;
+    background-color: rgb(58, 165, 214);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
