@@ -13,19 +13,8 @@ export class LoginNew extends Component {
             refId: data,
             name: '',
             email: '',
-            scoreList: [
-                { name: 'Parvati', score: 10 },
-                { name: 'Ritankar', score: 10 },
-                { name: 'Jassi', score: 5 }
-            ]
+            scoreList: []
         }
-        axios.get(`/invite/${data}`)
-            .then(res => {
-                console.log(res.data);
-            })
-            .catch( err => {
-                console.log(err)
-            })
     }
 
     onChange = e => {
@@ -55,7 +44,36 @@ export class LoginNew extends Component {
                 localStorage.setItem('refUser', JSON.stringify(friendUser));
                 this.props.history.push(`/invite/form/${curUser._id}/${friendUser._id}`);
             });
-            }
+    }
+
+    componentWillMount()
+    {
+        if(this.state.refId)
+        {
+            axios.get(`/invite/${this.state.refId}`)
+                .then(res => {
+                    if(res.msg_id === 0)
+                        this.props.history.push('/');
+                    else
+                    {
+                        let scores = res.data.invites;
+                        let newScores = [];
+                        for(let i = 0; i < scores.length; i++)
+                        {
+                            let score = { name: scores[i].friendname, score: scores[i].score }
+                            newScores.push(score)
+                        }
+                        this.setState({
+                            scoreList: newScores
+                        });
+                    }
+                })
+        }
+        else
+        {
+            this.props.history.push('/');
+        }
+    }
 
     render() {
         return (

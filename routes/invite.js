@@ -11,6 +11,7 @@ dotenv.config();
 
 // @route to render invite share page
 router.get('/invite/:fid', (req, res) => {
+    console.log("here")
     User.findOne({ _id: req.params.fid }, (err, fuser) => {
         if (err) {
             res.send(err);
@@ -20,6 +21,7 @@ router.get('/invite/:fid', (req, res) => {
                 if (fuser.qa == []) {
                     req.flash("error", "no quiz now");
                     // res.redirect('/');
+                    res.json({msg_id: 0});
                 } else {
                     Invite.find({ userid: fuser._id }, (err, finvites) => {
                         if (err) {
@@ -35,6 +37,7 @@ router.get('/invite/:fid', (req, res) => {
             } else {
                 req.flash("error", "no such game");
                 // res.redirect('/')
+                res.json({msg_id: 0});
             }
         }
     })
@@ -111,7 +114,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
                                     } else {
                                         req.flash("error", "no such invite");
                                         // res.redirect('/user/form/' + fuser._id);
-                                        res.json({ userid: fuser._id })
+                                        res.json({msg_id: 0});
                                     }
                                 }
                             })
@@ -119,13 +122,14 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
                         } else {
                             req.flash("error", "no such account");
                             // res.redirect('/');
+                            res.json({msg_id: 0});
                         }
 
                     }
                 })
             } else {
                 // res.redirect('/invite/results/' + req.params.uid + "/" + req.params.fid + '/' + finvite._id);
-                res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite._id })
+                res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite, msg_id: 2 })
             }
         }
     })
@@ -175,13 +179,14 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                         } else {
                             req.flash("error", "no such invitation");
                             // res.redirect('/user/form/' + fuser._id);
-                            res.json({ uid: fuser._id })
+                                res.json({msg_id: 0});
                         }
                     }
                 })
             } else {
                 req.flash('error', "no such account");
                 // res.redirect('/');
+                res.json({msg_id: 0});
             }
         }
     })
@@ -217,20 +222,21 @@ router.get('/invite/results/:uid/:fid/:iid', (req, res) => {
                                     } else {
                                         req.flash('error', "no such invite");
                                         // res.redirect('/invite/form/' + fuser._id + '/' + ffriend._id);
-                                        res.json({ uid: fuser._id, fid: ffriend._id })
+                                        res.json({ uid: fuser._id, fid: ffriend._id, msg_id: 2 })
                                     }
                                 }
                             })
                         } else {
                             req.flash("error", "no such invitation");
                             // res.redirect('/user/form/' + fuser._id);
-                            res.json({ uid: fuser._id })
+                            res.json({msg_id: 0});
                         }
                     }
                 })
             } else {
                 req.flash('error', "no such account");
                 // res.redirect('/');
+                res.json({msg_id: 0});
             }
         }
     })

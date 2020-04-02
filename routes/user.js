@@ -54,17 +54,17 @@ router.get('/user/form/:id',(req,res)=>{
             res.send(err);
         }else{
             if(fuser!=null){
-                if(fuser.qa==[]){
+                if(fuser.qa.length < 1){
                     // res.render('user/form',{id:fuser._id});
                     res.json({user:fuser});
                 }else{
                     // res.redirect('/user/share/'+fuser._id);
-                    res.json({userid:fuser._id});
+                    res.json({user:fuser, msg_id: 1});
                 }
                 
             }else{
                 req.flash("error","please enter details");
-                // res.redirect('/');
+                res.json({msg_id: 0});
             }
         }
     })
@@ -85,6 +85,7 @@ router.post('/user/form/:id',(req,res)=>{
                 });
             }else{
                 // res.redirect('/');
+                res.json({msg_id: 0});
             }
         }
     })
@@ -107,7 +108,7 @@ router.get('/user/share/:id',(req,res)=>{
                 })
             }else{
                 // res.redirect('/');
-                
+                res.json({msg_id: 0});
             }
         }
     })
@@ -126,7 +127,7 @@ router.post('/user/delete/:id',(req,res)=>{
                     res.send(err);
                 }else{
                     // res.redirect('/user/form/'+fuser._id);
-                    res.json({userid:fuser._id})
+                    res.json({user:fuser})
                 }
             })
         }

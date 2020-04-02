@@ -16,11 +16,22 @@ class Dashboard extends Component {
     constructor(props) {
         super(props);
         const user = JSON.parse(localStorage.getItem('user'));
-        this.state = {
-            user: user,
-            link: user.sharelink,
-            copyStatus: false,
-            scoreList: []
+        if(user)
+        {
+            this.state = {
+                user: user,
+                link: user.sharelink,
+                copyStatus: false,
+                scoreList: []
+            }
+        }
+        else{
+            this.state = {
+                user: user,
+                link: '',
+                copyStatus: false,
+                scoreList: []
+            }
         }
     }
 
@@ -40,99 +51,140 @@ class Dashboard extends Component {
 
     componentDidMount()
     {
-        axios.get(`/user/share/${this.state.user._id}`)
+        if(this.state.user)
+        {
+            axios.get(`/user/share/${this.state.user._id}`)
             .then(res => {
-                this.setState({
-                    scoreList: res.data.invites
-                })
+                if (res.data.msg_id === 0)
+                {
+                  this.props.history.push('/');
+                }
+                else
+                {
+                    let scores = res.data.invites;
+                    let newScores = [];
+                    for(let i = 0; i < scores.length; i++)
+                    {
+                        let score = { name: scores[i].friendname, score: scores[i].score }
+                        newScores.push(score)
+                    }
+                    this.setState({
+                        scoreList: newScores
+                    });
+                }
             })
+        }
+        else
+            this.props.history.push('/');
+    }
+
+    onClick()
+    {
+        axios.post(`/user/delete/${this.state.user._id}`)
+            .then(res => {
+                var curUser= res.data.user;
+                localStorage.setItem('user', JSON.stringify(curUser));
+                this.props.history.push(`/form`);   
+            });
+    }
+
+    componentDidUpdate()
+    {
+        console.log(this.state)
     }
 
     render() {
-        return (
-            <div>
-                <div className="quizHeader">{this.state.user.username}</div>
-                <div className="quizHeader quizStatus">Your Quiz is Ready!</div>
-                <div>Now share your quiz-link with your friends!</div>
-                <div>They will try to guess your answers & get a score out of 10.</div>
-                <div className="linkContainer">{this.state.link}</div>
-                {
-                    this.state.copyStatus
-                        ?
-                        <div className="copied">Link Copied!!!</div>
-                        :
-                        null
-                }
-                <div onClick={this.textCopyHandler} className="linkContainer copyLink">Copy Link</div>
+        if(this.state.user)
+        {
+            return (
+                <div>
+                    <div className="quizHeader">{this.state.user.username}</div>
+                    <div className="quizHeader quizStatus">Your Quiz is Ready!</div>
+                    <div>Now share your quiz-link with your friends!</div>
+                    <div>They will try to guess your answers & get a score out of 10.</div>
+                    <div className="linkContainer">{this.state.link}</div>
+                    {
+                        this.state.copyStatus
+                            ?
+                            <div className="copied">Link Copied!!!</div>
+                            :
+                            null
+                    }
+                    <div onClick={this.textCopyHandler} className="linkContainer copyLink">Copy Link</div>
 
-                <div className="row">
-                    <div onClick={() => window.open("https://www.whatsapp.com", '_blank')} className="col socialLink bg-green"><img src={whatsAppIcon} alt="icon" height="30" /> Set Status</div>
+                    <div className="row">
+                        <div onClick={() => window.open("https://www.whatsapp.com", '_blank')} className="col socialLink bg-green"><img src={whatsAppIcon} alt="icon" height="30" /> Set Status</div>
+                    </div>
+
+                    <div className="row">
+                        <div onClick={() => window.open("https://www.facebook.com", '_blank')} className="col socialLink bg-blue"><img src={facebookIcon} alt="icon" height="30" /> Share</div>
+                        <div onClick={() => window.open("https://www.snapchat.com", '_blank')} className="col socialLink bg-yellow"><img src={snapchatIcon} alt="icon" height="30" /> Share</div>
+                    </div>
+
+                    <div className="row">
+                        <div onClick={() => window.open("https://www.messenger.com", '_blank')} className="col socialLink bg-deepBlue"><img src={messengerIcon} alt="icon" height="30" /> Share</div>
+                        <div onClick={() => window.open("https://www.twitter.com", '_blank')} className="col socialLink bg-lightBlue"><img src={twiterIcon} alt="icon" height="30" /> Share</div>
+                    </div>
+
+                    <div className="row">
+                        <div onClick={() => window.open("https://www.instagram.com", '_blank')} className="col socialLink bg-insta"><img src={instagramIcon} alt="icon" height="30" /> Add to bio</div>
+                        <div onClick={() => window.open("https://www.whatsapp.com", '_blank')} className="col socialLink bg-green"><img src={whatsAppIcon} alt="icon" height="30" /> Get Status</div>
+                    </div>
+
+                    <div className="row">
+                        <div onClick={() => window.open("https://line.me", '_blank')} className="col socialLink bg-deepGreen"><img src={lineIcon} alt="icon" height="30" /> Share</div>
+                        <div onClick={() => window.open("https://www.facebook.com", '_blank')} className="col socialLink bg-deepYellow"><img src={talkIcon} alt="icon" height="30" /> Share</div>
+                    </div>
+
+                    <div className="row">
+                        <div onClick={() => window.open("https://www.vk.com", '_blank')} className="col socialLink bg-violet"><img src={vkIcon} alt="icon" height="30" /> Share</div>
+                    </div>
+
+                    <div className="quizHeader scoreStatus">Scoreboard of {this.state.user.username}</div>
+
+                    <Table className="scoreTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Score</th>
+                                <th>View</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.scoreList.length !== 0
+                                    ?
+                                    this.state.scoreList.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>name</td>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                        </tr>
+                                    ))
+                                    :
+                                    null
+                            }
+                        </tbody>
+                    </Table>
+                    {
+                        this.state.scoreList.length === 0
+                            ?
+                            <div className="noScore">No one has given this quiz yet.</div>
+                            :
+                            null
+                    }
+
+                    <div onClick={this.onClick.bind(this)} className="newQuiz">Delete and Create New Quiz</div>
+
                 </div>
-
-                <div className="row">
-                    <div onClick={() => window.open("https://www.facebook.com", '_blank')} className="col socialLink bg-blue"><img src={facebookIcon} alt="icon" height="30" /> Share</div>
-                    <div onClick={() => window.open("https://www.snapchat.com", '_blank')} className="col socialLink bg-yellow"><img src={snapchatIcon} alt="icon" height="30" /> Share</div>
-                </div>
-
-                <div className="row">
-                    <div onClick={() => window.open("https://www.messenger.com", '_blank')} className="col socialLink bg-deepBlue"><img src={messengerIcon} alt="icon" height="30" /> Share</div>
-                    <div onClick={() => window.open("https://www.twitter.com", '_blank')} className="col socialLink bg-lightBlue"><img src={twiterIcon} alt="icon" height="30" /> Share</div>
-                </div>
-
-                <div className="row">
-                    <div onClick={() => window.open("https://www.instagram.com", '_blank')} className="col socialLink bg-insta"><img src={instagramIcon} alt="icon" height="30" /> Add to bio</div>
-                    <div onClick={() => window.open("https://www.whatsapp.com", '_blank')} className="col socialLink bg-green"><img src={whatsAppIcon} alt="icon" height="30" /> Get Status</div>
-                </div>
-
-                <div className="row">
-                    <div onClick={() => window.open("https://line.me", '_blank')} className="col socialLink bg-deepGreen"><img src={lineIcon} alt="icon" height="30" /> Share</div>
-                    <div onClick={() => window.open("https://www.facebook.com", '_blank')} className="col socialLink bg-deepYellow"><img src={talkIcon} alt="icon" height="30" /> Share</div>
-                </div>
-
-                <div className="row">
-                    <div onClick={() => window.open("https://www.vk.com", '_blank')} className="col socialLink bg-violet"><img src={vkIcon} alt="icon" height="30" /> Share</div>
-                </div>
-
-                <div className="quizHeader scoreStatus">Scoreboard of {this.state.user.username}</div>
-
-                <Table className="scoreTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Score</th>
-                            <th>View</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.scoreList.length !== 0
-                                ?
-                                this.state.scoreList.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>name</td>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                ))
-                                :
-                                null
-                        }
-                    </tbody>
-                </Table>
-                {
-                    this.state.scoreList.length === 0
-                        ?
-                        <div className="noScore">No one has given this quiz yet.</div>
-                        :
-                        null
-                }
-
-                <div className="newQuiz">Delete and Create New Quiz</div>
-
-            </div>
-        );
+            );
+        }
+        else
+        {
+            return (<div></div>)
+        }
     }
 }
 

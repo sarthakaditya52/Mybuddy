@@ -8,6 +8,18 @@ export class CreateQuiz extends Component {
     constructor(props) {
         super(props);
         const data = JSON.parse(localStorage.getItem('user'));
+        if(!data)
+        {
+          this.state = {
+            id: null,
+            username: null,
+            email: null,
+            shareid: null,
+            QuesA: [null,null,null,null,null,null,null,null,null,null]
+          }
+        }
+        else
+        {
         this.state = {
           id: data._id,
           username: data.username,
@@ -15,6 +27,7 @@ export class CreateQuiz extends Component {
           shareid: data.sharelink,
           QuesA: [null,null,null,null,null,null,null,null,null,null]
         }
+      }
     }
 
     getQuesData(data)
@@ -51,10 +64,40 @@ export class CreateQuiz extends Component {
         const body = JSON.stringify(user);
         axios.post(`/user/form/${this.state.id}`,body,config)
           .then(res => {
-            var curUser= res.data.user;
-            localStorage.setItem('user', JSON.stringify(curUser));
-            this.props.history.push(`/user/share/${curUser._id}`);        
+            if (res.data.msg_id === 0)
+            {
+              this.props.history.push('/');
+            }
+            else
+            {
+              var curUser= res.data.user;
+              localStorage.setItem('user', JSON.stringify(curUser));
+              this.props.history.push(`/user/share/${curUser._id}`);   
+            }     
           });
+    }
+
+    componentWillMount()
+    {
+      if(this.state.id)
+      {
+        axios.get(`/user/form/${this.state.id}`)
+        .then(res => {
+          console.log(res.data)
+          if(res.data.msg_id === 1)
+            {
+              var curUser= res.data.user;
+              localStorage.setItem('user', JSON.stringify(curUser));
+              this.props.history.push(`/user/share/${curUser._id}`);    
+            }
+          else if (res.data.msg_id === 0)
+          {
+            this.props.history.push('/');
+          }
+        });
+      }
+      else
+      this.props.history.push('/');
     }
 
     render() {

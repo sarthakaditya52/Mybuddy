@@ -5,14 +5,23 @@ export class Question extends Component {
     constructor(props) {
         super(props);
         const data = JSON.parse(localStorage.getItem('user'));
-        this.state = {
-            user: data.name,
+        if(data)
+        {
+            this.state = {
+                user: data.username,
+            }            
+        }
+        else
+        {
+            this.state = {
+                user: '',
             }
+        }
         this.state = {
             count: 0,
             backgroundImage : this.props.gradient,
             isOpen: false,
-            user: data.name,
+            user: this.state.user,
             questionNo: this.props.quesNo,
             index: this.props.index,
             answer: null,            
