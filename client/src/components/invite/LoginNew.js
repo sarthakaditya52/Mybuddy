@@ -1,11 +1,25 @@
 import React, { Component } from 'react'
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
-export class Login extends Component {
-    state = {
-        name: '',
-        email: ''
+
+export class LoginNew extends Component {
+    constructor(props) {
+        super(props);
+        const data = JSON.parse(localStorage.getItem('refId'));
+        this.state={
+            refId: data,
+            name: '',
+            email: ''
+        }
+        axios.get(`/invite/${data}`)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch( err => {
+                console.log(err)
+            })
     }
 
     onChange = e => {
@@ -27,34 +41,29 @@ export class Login extends Component {
     
         // Request
         const body = JSON.stringify(user);
-        axios.post('/user/new',body,config)
+        axios.post(`/invite/new/${this.state.refId}`,body,config)
             .then(res => {
-                const userdata = {
-                    id: res.data.id,
-                    username: res.data.name,
-                    email: res.data.email,
-                    newU: res.data.newU
-                }
-                this.props.sendId(userdata);
+                var curUser= res.data.curUser;
+                var friendUser= res.data.friendUser;
+                localStorage.setItem('user', JSON.stringify(curUser));
+                localStorage.setItem('refUser', JSON.stringify(friendUser));
+                this.props.history.push(`/invite/form/${curUser._id}/${friendUser._id}`);
             });
-    }
+            }
 
     render() {
         return (
             <div>
                 <div className="card text-white bg-info mb-5">
-                    <div className="card-header" id="center"><h2>BuddyMojo - Best Buddy Challenge</h2></div>
+                    <div className="card-header" id="center"><h2>Best Buddy Challenge</h2></div>
                     <div className="card-body">
-                        <h5 className="card-title">Instructions</h5>
+                        <h5 className="card-title">Instructions:</h5>
                         <p className="card-text">
                             <ul>
                                 <li>Enter your Name</li>
                                 <li>Enter your Email</li>
-                                <li>Answer any 10 Questions about yourself.</li>
-                                <li>Your quiz-link will be ready.</li>
-                                <li>Share your quiz-link with your friends.</li>
-                                <li>Your friends will try to guess the right answers.</li>
-                                <li>Check the score of your friends at your quiz-link!</li>
+                                <li>Answer the Questions about your friend.</li>
+                                <li>Check your score at the scoreboard.</li>
                             </ul>
                         </p>
                         <div>
@@ -77,8 +86,9 @@ export class Login extends Component {
                     </div>
                 </div>
             </div>
+
         )
     }
 }
 
-export default Login;
+export default withRouter(LoginNew);

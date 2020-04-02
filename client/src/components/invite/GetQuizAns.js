@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
-import Question from './Question';
-import { Form, Button } from 'reactstrap';
+import { Form } from 'reactstrap';
+import axios from 'axios';
 
 export class GetQuizAns extends Component {
-    state = {
-        Style: { background: 'linear-gradient(#FF5F6D, #FFC371)' },
-        user: "Kripa",
-        index: 0,
-        questionOptions: [],
-        answerOptions: [],
-        answers: []
+    constructor(props) {
+        super(props);
+        const curUser = JSON.parse(localStorage.getItem('user'));
+        const friendsUser = JSON.parse(localStorage.getItem('refUser'));
+        this.state = {
+            curUser: curUser,
+            friendsUser: friendsUser,
+            Style: { background: 'linear-gradient(#FF5F6D, #FFC371)' },
+            user: curUser.name,
+            index: 0,
+            questionOptions: [],
+            answerOptions: [],
+            answers: []
+        }
     }
     componentWillMount() {
         let questionOptions =
@@ -49,19 +56,34 @@ export class GetQuizAns extends Component {
     answerHandler = (event) => {
         // console.log(event.target.getAttribute("index"));
         let index = this.state.index;
-        if (index < 9) {
+        if (index < 10) {
             let answer = this.state.answerOptions[index].options[event.target.getAttribute("index")].option;
             let answers = [...this.state.answers, answer];
             index += 1;
-            // console.log(answers);
-
             this.setState({
                 index,
                 answers
             });
+            if(index === 10)
+            {
+                // Header
+                const config = {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+  
+                // Request
+                const body = JSON.stringify(this.state.answers);
+                axios.post(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`, body, config);
+            }
         }
     }
 
+    componentDidUpdate()
+    {
+        //console.log(this.state);
+    }
     render() {
         return (
             <div>

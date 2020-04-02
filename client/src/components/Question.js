@@ -32,7 +32,7 @@ export class Question extends Component {
                 ],
             answerOptions:
                 [
-                    { id: 0, options: [ { key: 0, option: 'Add an option'}, { key: 1, option: 'Add an option'}] },
+                    { id: 0, options: [ { key: 0, option: 'Add an option'} ] },
                     { id: 1, options: [ { key: 0, option: 'Apple'},{ key: 1, option:'Nokia'},{ key: 2, option:'Oneplus'},{ key: 3, option:'Samsung'}] },
                     { id: 2, options: [ { key: 0, option: 'Batman'},{ key: 1, option:'Thor'},{ key: 2, option:'Spider-Man'},{ key: 3, option:'Iron Man'},{ key: 4, option:'Aquaman'}] },
                     { id: 3, options: [ { key: 0, option: 'None'},{ key: 1, option:'One'}, { key: 2, option: 'Two'}, { key: 3, option: 'Three'}, { key: 4, option: 'I want to adopt kids'} ] },

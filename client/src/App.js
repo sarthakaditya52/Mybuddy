@@ -3,10 +3,10 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import AppNavabr from './components/AppNavbar';
 import Login from './components/Login';
-import { BrowserRouter, Route, Switch, withRouter, useParams} from 'react-router-dom';
+import { Route, Switch, withRouter, useParams } from 'react-router-dom';
 import CreateQuiz from './components/CreateQuiz';
-import Question from './components/Question';
 import LoginNew from './components/invite/LoginNew'
+import GetQuizAns from './components/invite/GetQuizAns';
 
 export class App extends Component {
   constructor(props) {
@@ -80,9 +80,10 @@ export class App extends Component {
           <AppNavabr />
           <Route exact path="/" component={this.LoginPage} />
           <Route exact path="/form" component={this.CreateQuizPage} />
-          <Route path="/form/:id" children={<this.LoginNewPage />} />
-        </div>
-      </Switch>
+          <Route exact path="/invite/:id" component={this.LoginNewPage} />
+          <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
+       </div>
+     </Switch>
     )
   }
 }

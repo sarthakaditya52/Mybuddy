@@ -16,7 +16,7 @@ router.get('/invite/:fid', (req, res) => {
             res.send(err);
         } else {
             if (fuser != null) {
-                res.render("invite/index", { user: fuser });
+                res.json({ user: fuser });
             } else {
                 req.flash("error", "no such game");
             }
@@ -44,10 +44,14 @@ router.post('/invite/new/:fid', (req, res) => {
                                 res.send(err);
                             } else {
                                 if (fuser != null) {
-                                    res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
+                                    console.log("hrere")
+                                    res.json({
+                                        curUser: nuser,
+                                        friendUser: fuser
+                                    });
+                                    //res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
                                 } else {
                                     req.flash("error", "no such invitation");
-                                    res.redirect('/');
                                 }
                             }
                         })
@@ -55,8 +59,9 @@ router.post('/invite/new/:fid', (req, res) => {
                     }
                 })
             } else {
-                req.flash("error", "email already exists");
-                res.redirect('/');
+                res.json({
+                    msg: "User Already exists"
+                });
             }
         }
     })
@@ -105,6 +110,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
 
 // @post route to submit and compare invite form q-a
 router.post('/invite/form/:uid/:fid', (req, res) => {
+    console.log(req.body)
     User.findOne({ _id: req.params.uid }, (err, fuser) => {
         if (err) {
             res.send(err);

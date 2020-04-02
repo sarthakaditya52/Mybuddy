@@ -36,7 +36,7 @@ export class CreateQuiz extends Component {
           username: this.state.username,
           email: this.state.email,
           qa: this.state.QuesA,
-          sharelink: this.state.email
+          sharelink: this.state.id
         }
 
         // Header
@@ -48,6 +48,7 @@ export class CreateQuiz extends Component {
 
         // Request
         const body = JSON.stringify(user);
+        console.log(body);
         axios.post(`/user/form/${this.state.id}`,body,config);
     }
 

@@ -14,7 +14,6 @@ router.use(bodyParser.json());
 
 // @route to post new user
 router.post('/user/new',(req,res)=>{
-    const { name, email } = req.body;
     User.findOne({email:req.body.email},(err,fuser)=>{
         if(err){
             res.send(err);
@@ -37,12 +36,14 @@ router.post('/user/new',(req,res)=>{
                     }
                 })
             }else{
-                req.flash("error","email already exists");
+                var status = false;
+                if(fuser.qa.length < 1)
+                    status = true;
                 res.json({
                     id: fuser._id,
                     name: fuser.username,
                     email: fuser.email,
-                    newU: false
+                    newU: status
                 });
             }
         }
@@ -72,6 +73,7 @@ router.get('/user/form/:id',(req,res)=>{
 
 // @route to post form data for a user
 router.post('/user/form/:id',(req,res)=>{
+    console.log(req.body)
     User.findOne({_id:req.params.id},(err,fuser)=>{
         if(err){
             res.send(err);
