@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import axios from 'axios';
 
 export class Login extends Component {
     state = {
@@ -10,6 +11,32 @@ export class Login extends Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     };
+
+    onClick()
+    {
+        const user = {
+            name: this.state.name,
+            email: this.state.email
+        }
+        // Header
+        const config = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+    
+        // Request
+        const body = JSON.stringify(user);
+        axios.post('/user/new',body,config)
+            .then(res => {
+                const userdata = {
+                    id: res.data.id,
+                    username: res.data.name,
+                    email: res.data.email
+                }
+                this.props.sendId(userdata);
+            });
+    }
 
     render() {
         return (
@@ -42,7 +69,7 @@ export class Login extends Component {
                                     </FormGroup>
                                 </Col>
                                 <FormGroup id="submitBtn">
-                                    <Button>Submit</Button>
+                                    <Button onClick={this.onClick.bind(this)}>Submit</Button>
                                 </FormGroup>
                             </Form>
                         </div>

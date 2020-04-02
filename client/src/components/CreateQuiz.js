@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import Question from './Question'
 import { Button } from 'reactstrap';
+import axios from 'axios';
 
 export class CreateQuiz extends Component {
     constructor(props) {
         super(props);
+        const data = JSON.parse(localStorage.getItem('user'));
         this.state = {
+          id: data.id,
+          username: data.name,
+          email: data.email,
+          shareid: data.id,
           QuesA: [null,null,null,null,null,null,null,null,null,null]
         }
     }
@@ -22,6 +28,27 @@ export class CreateQuiz extends Component {
         this.setState({
           QuesA: Qa
         });
+    }
+
+    onClick()
+    {
+        let user = {
+          username: this.state.username,
+          email: this.state.email,
+          qa: this.state.QuesA,
+          sharelink: this.state.email
+        }
+
+        // Header
+        const config = {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        }
+
+        // Request
+        const body = JSON.stringify(user);
+        axios.post(`/user/form/${this.state.id}`,body,config);
     }
 
     render() {
@@ -88,7 +115,7 @@ export class CreateQuiz extends Component {
                     gradient={'green'}
                     QuesData={this.getQuesData.bind(this)}
                   />
-                <Button onClick={this.onClick}>
+                <Button onClick={this.onClick.bind(this)}>
                     Submit
                 </Button>
             </div>

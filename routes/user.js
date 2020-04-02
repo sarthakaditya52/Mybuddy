@@ -9,8 +9,12 @@ var router = express.Router({ mergeParams: true }),
     dotenv = require('dotenv');
 dotenv.config();
 
+router.use(bodyParser.urlencoded({ extended: false}));
+router.use(bodyParser.json());
+
 // @route to post new user
 router.post('/user/new',(req,res)=>{
+    const { name, email } = req.body;
     User.findOne({email:req.body.email},(err,fuser)=>{
         if(err){
             res.send(err);
@@ -24,12 +28,22 @@ router.post('/user/new',(req,res)=>{
                     if(err){
                         res.send(err);
                     }else{
-                        res.redirect('/user/form/'+nuser._id);
+                        res.json({
+                            id: nuser._id,
+                            name: nuser.username,
+                            email: nuser.email,
+                            newU: true
+                        });
                     }
                 })
             }else{
                 req.flash("error","email already exists");
-                res.redirect('/user/form/'+fuser._id);
+                res.json({
+                    id: fuser._id,
+                    name: fuser.username,
+                    email: fuser.email,
+                    newU: false
+                });
             }
         }
     })

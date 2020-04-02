@@ -4,14 +4,15 @@ import { Form, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 export class Question extends Component {
     constructor(props) {
         super(props);
+        const data = JSON.parse(localStorage.getItem('user'));
         this.state = {
-            user: 'Sarthak',
+            user: data.name,
             }
         this.state = {
             count: 0,
             backgroundImage : this.props.gradient,
             isOpen: false,
-            user: 'Sarthak',
+            user: data.name,
             questionNo: this.props.quesNo,
             index: this.props.index,
             answer: null,            
