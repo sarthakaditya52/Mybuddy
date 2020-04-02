@@ -30,9 +30,7 @@ export class Login extends Component {
         axios.post('/user/new',body,config)
             .then(res => {
                 const userdata = {
-                    id: res.data.id,
-                    username: res.data.name,
-                    email: res.data.email,
+                    user: res.data.user,
                     newU: res.data.newU
                 }
                 this.props.sendId(userdata);
