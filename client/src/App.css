@@ -20,7 +20,7 @@ body
 
 #container
 {
-	width: 748px;
+	max-width: 748px;
 	padding: 0;
 	margin-right: auto;
     margin-left: auto;
@@ -28,9 +28,19 @@ body
 
 #nav
 {
+    align-items: center;
     border: none;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
+    position: relative;
+    height: 50px;
+}
+
+.brand {
+    position: absolute;
+    left: 50%;
+    margin-left: -50px !important;  /* 50% of your logo width */
+    display: block;
 }
 
 #center

@@ -3,12 +3,12 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import AppNavabr from './components/AppNavbar';
 import Login from './components/Login';
-import { Route, Switch, withRouter, useParams } from 'react-router-dom';
+import { Route, Switch, withRouter, useParams,Redirect } from 'react-router-dom';
 import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
-import Dashboard from './components/dashboard';
-import YourResult from './components/yourResult';
+import Dashboard from './components/Dashboard';
+import YourResult from './components/YourResult';
 
 export class App extends Component {
   constructor(props) {
@@ -79,7 +79,8 @@ export class App extends Component {
           <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
           <Route exact path="/user/share/:id" component={Dashboard} />
           <Route exact path="/invite/results/:uid/:fid/:iid" component={YourResult} />
-          <Route component={this.LoginPage} path='*' />
+          <Route path='*'/>
+          <Redirect from='*' to='/' />
        </div>
      </Switch>
     )

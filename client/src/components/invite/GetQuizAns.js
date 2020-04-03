@@ -41,6 +41,8 @@ export class GetQuizAns extends Component {
                 .then(res => {
                     if(res.msg_id === 0)
                         this.props.history.push('/');
+                    if(res.msg_id === 1)
+                        this.props.history.push('/form');
                     else if (res.msg_id === 2)
                     {
                         var invresult = res.data.iid;

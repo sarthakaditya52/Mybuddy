@@ -11,7 +11,6 @@ dotenv.config();
 
 // @route to render invite share page
 router.get('/invite/:fid', (req, res) => {
-    console.log("here")
     User.findOne({ _id: req.params.fid }, (err, fuser) => {
         if (err) {
             res.send(err);
@@ -98,7 +97,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
     if(req.params.uid==req.params.fid){
         req.flash("error","cannot answer your own quiz")
         // res.redirect('/user/'+req.params.uid);
-        res.json({uid:req.params.uid})
+        res.json({uid:req.params.uid,msg_id: 1})
     }else{
         Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
             if (err) {
