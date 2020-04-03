@@ -58,6 +58,8 @@ router.post('/invite/new/:fid', (req, res) => {
                     if (err) {
                         res.send(err);
                     } else {
+                        nuser.sharelink="http://gamestickman.herokuapp.com/invite/"+nuser._id;
+                        nuser.save();
                         User.findOne({ _id: req.params.fid }, (err, fuser) => {
                             if (err) {
                                 res.send(err);
