@@ -50,7 +50,7 @@ router.post('/user/new',(req,res)=>{
 
 // @route to render form to a user
 router.get('/user/form/:id',(req,res)=>{
-    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
         User.findOne({_id:req.params.id},(err,fuser)=>{
             if(err){
@@ -66,20 +66,21 @@ router.get('/user/form/:id',(req,res)=>{
                     }
                     
                 }else{
-                    req.flash("error","please enter details");
+                    // req.flash("error","please enter details");
                     res.json({msg_id: 0});
                 }
             }
         })
       }else{
         // res.redirect('/');
+        res.json({msg_id: 0});
       }
     
 })
 
 // @route to post form data for a user
 router.post('/user/form/:id',(req,res)=>{
-    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
         User.findOne({_id:req.params.id},(err,fuser)=>{
             if(err){
@@ -101,12 +102,13 @@ router.post('/user/form/:id',(req,res)=>{
     
       }else{
         // res.redirect('/')
+        res.json({msg_id: 0});
       }
     })
 
 // @share page for user
 router.get('/user/share/:id',(req,res)=>{
-    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+    if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
         User.findOne({_id:req.params.id},(err,fuser)=>{
             if(err){
@@ -128,7 +130,8 @@ router.get('/user/share/:id',(req,res)=>{
             }
         })
       }else{
-        res.redirect('/');
+        //res.redirect('/');
+        res.json({msg_id: 0});
       }
     
 })

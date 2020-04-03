@@ -49,7 +49,7 @@ class Dashboard extends Component {
         })
     }
 
-    componentDidMount()
+    componentWillMount()
     {
         if(this.state.user)
         {
@@ -140,27 +140,23 @@ class Dashboard extends Component {
                         <div onClick={() => window.open("https://www.vk.com", '_blank')} className="col socialLink bg-violet"><img src={vkIcon} alt="icon" height="30" /> Share</div>
                     </div>
 
-                    <div className="quizHeader scoreStatus">Scoreboard of {this.state.user.username}</div>
+                    <div className="scoreResultOf">Scoreboard of {this.state.user.username}</div>
 
                     <Table className="scoreTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Score</th>
-                                <th>View</th>
-                                <th>Delete</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="resultTable">
                             {
                                 this.state.scoreList.length !== 0
                                     ?
                                     this.state.scoreList.map((item, index) => (
                                         <tr key={index}>
-                                            <td>name</td>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
+                                            <td>{item.name}</td>
+                                            <td>{item.score}</td>
                                         </tr>
                                     ))
                                     :
@@ -175,7 +171,6 @@ class Dashboard extends Component {
                             :
                             null
                     }
-
                     <div onClick={this.onClick.bind(this)} className="newQuiz">Delete and Create New Quiz</div>
 
                 </div>

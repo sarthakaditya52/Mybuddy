@@ -1,13 +1,8 @@
 import React, { Component } from 'react'
-
+import Logo from './../asserts/icons/STICKBUDDIES-01.png'
 import{
-    Collapse,
     Navbar,
-    NavbarToggler,
     NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
     Container
     } from 'reactstrap';
     
@@ -27,18 +22,8 @@ class AppNavbar extends Component{
     return(
             <div>
                 <Navbar id="nav" color="light" dark expand="sm" className="mb-3">
-                    <Collapse isOpen = { this.state.isOpen } navbar>
-                            <Nav navbar>
-                                <NavItem>
-                                    <NavLink href="#">
-                                        Somewhere
-                                    </NavLink>
-                                </NavItem>
-                            </Nav>
-                    </Collapse>
                     <Container>
-                        <NavbarBrand href = "/">Icon</NavbarBrand>
-                        <NavbarToggler onClick = { this.toggle } />
+                            <NavbarBrand className="brand" href = "/"><img src={Logo} alt="icon" height="30" /></NavbarBrand>
                     </Container>
                 </Navbar>
             </div>

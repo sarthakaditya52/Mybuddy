@@ -41,6 +41,8 @@ export class GetQuizAns extends Component {
                 .then(res => {
                     if(res.msg_id === 0)
                         this.props.history.push('/');
+                    if(res.msg_id === 1)
+                        this.props.history.push('/form');
                     else if (res.msg_id === 2)
                     {
                         var invresult = res.data.iid;
@@ -117,6 +119,12 @@ export class GetQuizAns extends Component {
                         .then(res => {
                             if(res.msg_id === 0)
                                 this.props.history.push('/');
+                            else if (res.data.msg_id === 1)
+                            {
+                                var user = res.data.user;
+                                localStorage.setItem('user', JSON.stringify(user));   
+                                this.props.history.push('/form');                            
+                            }
                             else
                             {
                                 var invresult = res.data.iid;

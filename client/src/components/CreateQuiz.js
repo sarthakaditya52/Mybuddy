@@ -53,28 +53,52 @@ export class CreateQuiz extends Component {
           sharelink: this.state.id
         }
 
-        // Header
-        const config = {
-          headers: {
-            "Content-Type": "application/json"
+        let go = false;
+        let flag = true;
+        console.log(user.qa)
+        for(let i = 0; i < user.qa.length; i++)
+        {
+          if(!user.qa[i])
+            flag = false
+          else
+          {
+            if(!user.qa[i].ques)
+              flag = false
+            for(let j = 0; j < user.qa[i].options.length; j++)
+            {
+              if(!user.qa[i].options[j])
+                flag = false
+            }
           }
         }
 
-        // Request
-        const body = JSON.stringify(user);
-        axios.post(`/user/form/${this.state.id}`,body,config)
-          .then(res => {
-            if (res.data.msg_id === 0)
-            {
-              this.props.history.push('/');
+        go = flag
+
+        if(go)
+        {
+           // Header
+          const config = {
+            headers: {
+              "Content-Type": "application/json"
             }
-            else
-            {
-              var curUser= res.data.user;
-              localStorage.setItem('user', JSON.stringify(curUser));
-              this.props.history.push(`/user/share/${curUser._id}`);   
-            }     
-          });
+          }
+
+          // Request
+          const body = JSON.stringify(user);
+          axios.post(`/user/form/${this.state.id}`,body,config)
+            .then(res => {
+              if (res.data.msg_id === 0)
+              {
+                this.props.history.push('/');
+              }
+              else
+              {
+                var curUser= res.data.user;
+                localStorage.setItem('user', JSON.stringify(curUser));
+                this.props.history.push(`/user/share/${curUser._id}`);   
+              }     
+            });
+        }
     }
 
     componentWillMount()
@@ -83,7 +107,6 @@ export class CreateQuiz extends Component {
       {
         axios.get(`/user/form/${this.state.id}`)
         .then(res => {
-          console.log(res.data)
           if(res.data.msg_id === 1)
             {
               var curUser= res.data.user;
@@ -97,7 +120,7 @@ export class CreateQuiz extends Component {
         });
       }
       else
-      this.props.history.push('/');
+        this.props.history.push('/');
     }
 
     render() {

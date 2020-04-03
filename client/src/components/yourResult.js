@@ -45,6 +45,12 @@ class YourResult extends Component {
                 {
                     this.props.history.push(`/invite/form/${this.state.curUser._id}/${this.state.friendUser._id}`)
                 }
+                else if (res.data.msg_id === 1)
+                {
+                    var user = res.data.user;
+                    localStorage.setItem('user', JSON.stringify(user));   
+                    this.props.history.push('/form');    
+                }
                 else if (res.data.msg_id === 0)
                     this.props.history.push('/')
                 else
