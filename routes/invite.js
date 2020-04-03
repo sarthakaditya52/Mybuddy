@@ -11,6 +11,7 @@ dotenv.config();
 
 // @route to render invite share page
 router.get('/invite/:fid', (req, res) => {
+    console.log("meme")
     if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
         User.findOne({ _id: req.params.fid }, (err, fuser) => {
@@ -21,7 +22,7 @@ router.get('/invite/:fid', (req, res) => {
 
                 if (fuser != null) {
                     if (fuser.qa == []) {
-                        console.log("hello")
+                        // console.log("hello")
                         req.flash("error", "no quiz now");
                         // res.redirect('/');
                         res.json({ msg_id: 0 });
