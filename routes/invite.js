@@ -21,6 +21,7 @@ router.get('/invite/:fid', (req, res) => {
 
                 if (fuser != null) {
                     if (fuser.qa == []) {
+                        console.log("hello")
                         req.flash("error", "no quiz now");
                         // res.redirect('/');
                         res.json({ msg_id: 0 });
@@ -136,6 +137,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
     if (req.params.uid == req.params.fid) {
         req.flash("error", "cannot answer your own quiz")
         // res.redirect('/user/'+req.params.uid);
+        // console.log("hahah")
         res.json({ uid: req.params.uid, msg_id: 1 })
     } else {
         if (req.params.fid.match(/^[0-9a-fA-F]{24}$/) && req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
