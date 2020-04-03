@@ -48,6 +48,7 @@ router.get('/invite/:fid', (req, res) => {
             }
         })
     } else {
+        console.log("no game")
         req.flash("error", "no such game");
         // res.redirect('/')
     }
