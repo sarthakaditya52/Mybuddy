@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 export class Login extends Component {
     state = {
@@ -35,6 +36,16 @@ export class Login extends Component {
                 }
                 this.props.sendId(userdata);
             });
+    }
+
+    componentWillMount()
+    {
+        const data = JSON.parse(localStorage.getItem('user'));
+        if(data)
+        {
+            if(data._id)
+                this.props.history.push('/form');
+        }
     }
 
     render() {
@@ -79,4 +90,4 @@ export class Login extends Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);
