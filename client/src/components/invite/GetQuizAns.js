@@ -121,7 +121,6 @@ export class GetQuizAns extends Component {
                     const body = JSON.stringify(this.state.answers);
                     axios.post(`/invite/form/${this.props.uid}/${this.props.fid}`, body, config)
                         .then(res => {
-                            console.log(res.data)
                             if(res.data.msg_id === 0)
                                 this.props.history.push('/');
                             else if(res.data.msg_id === 1)

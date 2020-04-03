@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Table } from 'reactstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 class YourResult extends Component {
 
@@ -56,7 +57,6 @@ class YourResult extends Component {
                 this.props.history.push('/')
             else
             {
-                console.log(res.data)
                 let scores = res.data.invites;
                 let newScores = [];
                 for(let i = 0; i < scores.length; i++)
@@ -152,4 +152,4 @@ class YourResult extends Component {
     }
 }
 
-export default YourResult;
+export default withRouter(YourResult);
