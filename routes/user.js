@@ -110,14 +110,14 @@ router.post('/user/form/:id', (req, res) => {
 // @share page for user
 router.get('/user/share/:id', (req, res) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
-        console.log(req.params.id)
+        // console.log(req.params.id)
         // Yes, it's a valid ObjectId, proceed with `findById` call.
         User.findOne({ _id: req.params.id }, (err, fuser) => {
             if (err) {
                 res.send(err);
             } else {
                 if (fuser != null) {
-                    console.log(fuser)
+                    // console.log(fuser)
                     Invite.find({ userid: req.params.id }, (err, finvites) => {
                         if (err) {
                             res.send(err);
