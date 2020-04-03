@@ -7,8 +7,8 @@ import { Route, Switch, withRouter, useParams,Redirect } from 'react-router-dom'
 import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
-import Dashboard from './components/dashboard';
-import YourResult from './components/yourResult';
+import Dashboard from './components/Dashboard';
+import YourResult from './components/YourResult';
 
 export class App extends Component {
   constructor(props) {
@@ -78,8 +78,7 @@ export class App extends Component {
         user: data.user,
         frienduser: data.frienduser
       })
-      console.log(this.state)
-      //this.props.history.push(`/invite/form/${this.setState.user._id}/${this.state.frienduser._id}`);
+      this.props.history.push(`/invite/form/${this.state.user._id}/${this.state.frienduser._id}`);
     }
   }
 
@@ -115,6 +114,53 @@ export class App extends Component {
     )
   }
 
+  getQuizAnsData(data)
+  {
+    if(data.msg_id === 1)
+    {
+      this.setState({
+        user: data.user
+      });
+      this.props.history.push(`/form`);
+    }
+  }
+
+  GetQuizAnsPage = (props) => {
+    let { uid, fid } = useParams();
+    return (
+      <GetQuizAns
+        uid = { uid }
+        fid = { fid }
+        curUser = {this.state.user}
+        frienduser = {this.state.frienduser}
+        sendId={this.getQuizAnsData.bind(this)}  
+      />
+    )
+  }
+
+  getYourResultData(data)
+  {
+    if(data.msg_id === 1)
+    {
+      this.setState({
+        user: data.user
+      });
+      this.props.history.push(`/form`);
+    }
+  }
+
+  YourResultPage = (props) => {
+    let {uid,fid,iid} = useParams();
+    return (
+      <YourResult
+        uid = {uid}
+        fid = {fid}
+        iid = {iid}
+        sendId={this.getYourResultData.bind(this)}  
+      />
+    )
+  }
+
   render() {
     return (
       <Switch>
@@ -124,8 +170,8 @@ export class App extends Component {
           <Route exact path="/form" component={this.CreateQuizPage} />
           <Route exact path="/user/share/:id" component={this.DashboardPage} />
           <Route exact path="/invite/:id" component={this.LoginNewPage} />
-          <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
-          <Route exact path="/invite/results/:uid/:fid/:iid" component={YourResult} />
+          <Route exact path="/invite/form/:uid/:fid" component={this.GetQuizAnsPage} />
+          <Route exact path="/invite/results/:uid/:fid/:iid" component={this.YourResultPage} />
        </div>
      </Switch>
     )

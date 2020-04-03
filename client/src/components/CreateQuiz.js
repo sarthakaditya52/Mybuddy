@@ -121,8 +121,13 @@ export class CreateQuiz extends Component {
               this.props.sendId(userdata); 
             }
           else if (res.data.msg_id === 0)
-          {
-            this.props.history.push('/');
+            {
+              this.props.history.push('/');
+            }
+          else{
+            this.setState({
+              user: res.data.user
+            });
           }
         });
       }
@@ -131,74 +136,92 @@ export class CreateQuiz extends Component {
     }
 
     render() {
+      if(this.state.user)
+      {
         return (
-            <div>
-                <Question
-                    index={1}
-                    quesNo={1}
-                    gradient={'green'}
-                    resQ = {this.state.QuesA[0]}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={2}
-                    quesNo={2}
-                    gradient={'voilet'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={3}
-                    quesNo={3}
-                    gradient={'indigo'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={4}
-                    quesNo={4}
-                    gradient={'yellow'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={5}
-                    quesNo={5}
-                    gradient={'red'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={6}
-                    quesNo={6}
-                    gradient={'voilet'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={7}
-                    quesNo={7}
-                    gradient={'yellow'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={8}
-                    quesNo={8}
-                    gradient={'indigo'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={9}
-                    quesNo={9}
-                    gradient={'red'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Question
-                    index={0}
-                    quesNo={10}
-                    gradient={'green'}
-                    QuesData={this.getQuesData.bind(this)}
-                  />
-                <Button onClick={this.onClick.bind(this)}>
-                    Submit
-                </Button>
-            </div>
-        )
+          <div>
+              <Question
+                  index={1}
+                  quesNo={1}
+                  gradient={'green'}
+                  resQ = {this.state.QuesA[0]}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={2}
+                  quesNo={2}
+                  gradient={'voilet'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={3}
+                  quesNo={3}
+                  gradient={'indigo'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={4}
+                  quesNo={4}
+                  gradient={'yellow'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={5}
+                  quesNo={5}
+                  gradient={'red'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={6}
+                  quesNo={6}
+                  gradient={'voilet'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={7}
+                  quesNo={7}
+                  gradient={'yellow'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={8}
+                  quesNo={8}
+                  gradient={'indigo'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={9}
+                  quesNo={9}
+                  gradient={'red'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Question
+                  index={0}
+                  quesNo={10}
+                  gradient={'green'}
+                  QuesData={this.getQuesData.bind(this)}
+                  username = {this.state.user.username}
+                />
+              <Button onClick={this.onClick.bind(this)}>
+                  Submit
+              </Button>
+          </div>
+      )
+      }
+      else
+      {
+        return (<div></div>)
+      }
+  
     }
 }
 

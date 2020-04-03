@@ -4,11 +4,11 @@ import { Form, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reac
 export class Question extends Component {
     constructor(props) {
         super(props);
-        const data = JSON.parse(localStorage.getItem('user'));
+        const data = props.username;
         if(data)
         {
             this.state = {
-                user: data.username,
+                user: data,
             }            
         }
         else

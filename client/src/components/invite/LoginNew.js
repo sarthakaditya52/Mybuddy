@@ -57,6 +57,7 @@ export class LoginNew extends Component {
                         frienduser: friendUser,
                         msg_id: 2
                     }
+                    this.props.sendId(data);
                 }
                 // this.props.history.push(`/invite/form/${curUser._id}/${friendUser._id}`);
             });

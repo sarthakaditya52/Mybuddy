@@ -55,7 +55,6 @@ class Dashboard extends Component {
 
         axios.get(`/user/share/${this.props.id}`)
         .then(res => {
-            console.log(res.data)
             if (res.data.msg_id === 0)
             {
                 this.props.history.push('/');

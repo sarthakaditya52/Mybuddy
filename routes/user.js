@@ -146,7 +146,6 @@ router.post('/user/delete/:id', (req, res) => {
             res.send(err);
         } else {
             fuser.qa = [];
-            fuser.sharelink = "";
             fuser.save();
             Invite.remove({ userid: req.params.id }, (err) => {
                 if (err) {
