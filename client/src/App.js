@@ -7,8 +7,8 @@ import { Route, Switch, withRouter, useParams,Redirect } from 'react-router-dom'
 import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
-import Dashboard from './components/Dashboard';
-import YourResult from './components/YourResult';
+import Dashboard from './components/dashboard';
+import YourResult from './components/yourResult';
 
 export class App extends Component {
   constructor(props) {

@@ -4,30 +4,30 @@ var router = express.Router({ mergeParams: true }),
     bodyParser = require("body-parser"),
     fs = require('fs'),
     path = require('path'),
-    User =require('../models/user'),
-    Invite =require('../models/invite'),
+    User = require('../models/user'),
+    Invite = require('../models/invite'),
     dotenv = require('dotenv');
 dotenv.config();
 
-router.use(bodyParser.urlencoded({ extended: false}));
+router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 // @route to post new user
-router.post('/user/new',(req,res)=>{
-    User.findOne({email:req.body.email},(err,fuser)=>{
-        if(err){
+router.post('/user/new', (req, res) => {
+    User.findOne({ email: req.body.email }, (err, fuser) => {
+        if (err) {
             res.send(err);
-        }else{
-            if(fuser==null){
-                const user={
-                    username:req.body.name,
-                    email:req.body.email
+        } else {
+            if (fuser == null) {
+                const user = {
+                    username: req.body.name,
+                    email: req.body.email
                 }
-                User.create(user,(err,nuser)=>{
-                    if(err){
+                User.create(user, (err, nuser) => {
+                    if (err) {
                         res.send(err);
-                    }else{
-                        nuser.sharelink="http://gamestickman.herokuapp.com/invite/"+nuser._id;
+                    } else {
+                        nuser.sharelink = "http://gamestickman.herokuapp.com/invite/" + nuser._id;
                         nuser.save();
                         res.json({
                             user: nuser,
@@ -35,9 +35,9 @@ router.post('/user/new',(req,res)=>{
                         });
                     }
                 })
-            }else{
+            } else {
                 var status = false;
-                if(fuser.qa.length < 1)
+                if (fuser.qa.length < 1)
                     status = true;
                 res.json({
                     user: fuser,
@@ -49,107 +49,111 @@ router.post('/user/new',(req,res)=>{
 })
 
 // @route to render form to a user
-router.get('/user/form/:id',(req,res)=>{
+router.get('/user/form/:id', (req, res) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
-        User.findOne({_id:req.params.id},(err,fuser)=>{
-            if(err){
+        User.findOne({ _id: req.params.id }, (err, fuser) => {
+            if (err) {
                 res.send(err);
-            }else{
-                if(fuser!=null){
-                    if(fuser.qa.length < 1){
+            } else {
+                if (fuser != null) {
+                    if (fuser.qa.length < 1) {
                         // res.render('user/form',{id:fuser._id});
-                        res.json({user:fuser});
-                    }else{
+                        res.json({ user: fuser });
+                    } else {
+                        console.log("hi")
                         // res.redirect('/user/share/'+fuser._id);
-                        res.json({user:fuser, msg_id: 1});
+                        res.json({ user: fuser, msg_id: 1 });
                     }
-                    
-                }else{
+
+                } else {
                     // req.flash("error","please enter details");
-                    res.json({msg_id: 0});
+                    res.json({ msg_id: 0 });
                 }
             }
         })
-      }else{
+    } else {
         // res.redirect('/');
-        res.json({msg_id: 0});
-      }
-    
+        res.json({ msg_id: 0 });
+    }
+
 })
 
 // @route to post form data for a user
-router.post('/user/form/:id',(req,res)=>{
+router.post('/user/form/:id', (req, res) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
         // Yes, it's a valid ObjectId, proceed with `findById` call.
-        User.findOne({_id:req.params.id},(err,fuser)=>{
-            if(err){
+        User.findOne({ _id: req.params.id }, (err, fuser) => {
+            if (err) {
                 res.send(err);
-            }else{
-                if(fuser!=null){
-                    fuser.qa=req.body.qa;
+            } else {
+                if (fuser != null) {
+                    fuser.qa = req.body.qa;
                     fuser.save();
                     // res.redirect('/user/share/'+fuser._id);
                     res.json({
                         user: fuser
                     });
-                }else{
+                } else {
                     // res.redirect('/');
-                    res.json({msg_id: 0});
+                    res.json({ msg_id: 0 });
                 }
             }
         })
-    
-      }else{
+
+    } else {
         // res.redirect('/')
-        res.json({msg_id: 0});
-      }
-    })
+        res.json({ msg_id: 0 });
+    }
+})
 
 // @share page for user
-router.get('/user/share/:id',(req,res)=>{
+router.get('/user/share/:id', (req, res) => {
     if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+        console.log(req.params.id)
         // Yes, it's a valid ObjectId, proceed with `findById` call.
-        User.findOne({_id:req.params.id},(err,fuser)=>{
-            if(err){
+        User.findOne({ _id: req.params.id }, (err, fuser) => {
+            if (err) {
                 res.send(err);
-            }else{
-                if(fuser!=null){
-                    Invite.find({userid:req.params.id},(err,finvites)=>{
-                        if(err){
+            } else {
+                if (fuser != null) {
+                    console.log(fuser)
+                    Invite.find({ userid: req.params.id }, (err, finvites) => {
+                        if (err) {
                             res.send(err);
-                        }else{
-                            res.json({invites:finvites,user:fuser})
+                        } else {
+                            res.json({ invites: finvites, user: fuser })
                             // res.render('share page')
                         }
                     })
-                }else{
+                } else {
                     // res.redirect('/');
-                    res.json({msg_id: 0});
+                    res.json({ msg_id: 0 });
                 }
             }
         })
-      }else{
+    } else {
         //res.redirect('/');
-        res.json({msg_id: 0});
-      }
-    
+        console.log("share")
+        res.json({ msg_id: 0 });
+    }
+
 })
 // @route to delete quiz and start new quiz
-router.post('/user/delete/:id',(req,res)=>{
-    User.findOne({_id:req.params.id},(err,fuser)=>{
-        if(err){
+router.post('/user/delete/:id', (req, res) => {
+    User.findOne({ _id: req.params.id }, (err, fuser) => {
+        if (err) {
             res.send(err);
-        }else{
-            fuser.qa=[];
-            fuser.sharelink="";
+        } else {
+            fuser.qa = [];
+            fuser.sharelink = "";
             fuser.save();
-            Invite.remove({userid:req.params.id},(err)=>{
-                if(err){
+            Invite.remove({ userid: req.params.id }, (err) => {
+                if (err) {
                     res.send(err);
-                }else{
+                } else {
                     // res.redirect('/user/form/'+fuser._id);
-                    res.json({user:fuser})
+                    res.json({ user: fuser })
                 }
             })
         }
@@ -157,13 +161,13 @@ router.post('/user/delete/:id',(req,res)=>{
 })
 
 // @route to delete scoreboard row for user
-router.post('/user/delete/invite/:inviteid/:uid',(req,res)=>{
-    Invite.remove({_id:req.params.inviteid},(err)=>{
-        if(err){
+router.post('/user/delete/invite/:inviteid/:uid', (req, res) => {
+    Invite.remove({ _id: req.params.inviteid }, (err) => {
+        if (err) {
             res.send(err);
-        }else{
+        } else {
             // res.redirect('/user/share/'+req.params.uid);
-            res.json({userid:req.params.uid})
+            res.json({ userid: req.params.uid })
         }
     })
 })
@@ -176,4 +180,4 @@ router.post('/user/delete/invite/:inviteid/:uid',(req,res)=>{
 
 
 
-module.exports =router;
+module.exports = router;
