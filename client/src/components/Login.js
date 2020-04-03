@@ -38,16 +38,6 @@ export class Login extends Component {
             });
     }
 
-    componentWillMount()
-    {
-        const data = JSON.parse(localStorage.getItem('user'));
-        if(data)
-        {
-            if(data._id)
-                this.props.history.push('/form');
-        }
-    }
-
     render() {
         return (
             <div>

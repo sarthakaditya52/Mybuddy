@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Form } from 'reactstrap';
+import { withRouter } from 'react-router-dom';
 import axios from 'axios';
 
 export class GetQuizAns extends Component {
     constructor(props) {
         super(props);
-        const curUser = JSON.parse(localStorage.getItem('user'));
-        const friendsUser = JSON.parse(localStorage.getItem('refUser'));
+        const curUser = props.curUser;
+        const friendsUser = props.friendsuser;
         if(curUser)
         {
             this.state = {
@@ -35,59 +36,64 @@ export class GetQuizAns extends Component {
         }
     }
     componentWillMount() {
-        if(this.state.curUser && this.state.friendsUser)
-        {
-            axios.get(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`)
-                .then(res => {
-                    if(res.data.msg_id === 0)
-                        this.props.history.push('/');
-                    if(res.data.msg_id === 1)
-                        this.props.history.push('/form');
-                    else if (res.data.msg_id === 2)
+
+        axios.get(`/invite/form/${this.props.uid}/${this.props.fid}`)
+            .then(res => {
+                if(res.data.msg_id === 0)
+                    this.props.history.push('/');
+                else if(res.data.msg_id === 1)
                     {
-                        var invresult = res.data.iid;
-                        localStorage.setItem('result', JSON.stringify(invresult));
-                        this.props.history.push(`/invite/results/${this.state.curUser._id}/${this.state.friendsUser._id}/${invresult._id}`);   
+                        const data = {
+                            user: res.data.user,
+                            msg_id: 1
+                        }
+                        this.props.sendId(data);
                     }
+                else if (res.data.msg_id === 2)
+                {
+                    var invresult = res.data.iid;
+                    this.props.history.push(`/invite/results/${this.props.uid}/${this.props.fid}/${invresult._id}`);   
+                }
+                else
+                {
+                    let questionOptions =
+                    [
+                        { ques: res.data.friend.qa[0].ques, id: 1 },
+                        { ques: res.data.friend.qa[1].ques, id: 2 },
+                        { ques: res.data.friend.qa[2].ques, id: 3 },
+                        { ques: res.data.friend.qa[3].ques, id: 4 },
+                        { ques: res.data.friend.qa[4].ques, id: 5 },
+                        { ques: res.data.friend.qa[5].ques, id: 6 },
+                        { ques: res.data.friend.qa[6].ques, id: 7 },
+                        { ques: res.data.friend.qa[7].ques, id: 8 },
+                        { ques: res.data.friend.qa[8].ques, id: 9 },
+                        { ques: res.data.friend.qa[9].ques, id: 10 }
+                    ];
+        
+                let answerOptions =
+                    [
+                        { id: 1, options: res.data.friend.qa[0].options },
+                        { id: 2, options: res.data.friend.qa[1].options },
+                        { id: 3, options: res.data.friend.qa[2].options },
+                        { id: 4, options: res.data.friend.qa[3].options },
+                        { id: 5, options: res.data.friend.qa[4].options },
+                        { id: 6, options: res.data.friend.qa[5].options },
+                        { id: 7, options: res.data.friend.qa[6].options },
+                        { id: 8, options: res.data.friend.qa[7].options },
+                        { id: 9, options: res.data.friend.qa[8].options },
+                        { id: 10, options: res.data.friend.qa[9].options }
+                    ];
+        
+                this.setState({
+                    curUser: res.data.user,
+                    friendsUser: res.data.friend,
+                    questionOptions,
+                    answerOptions
                 });
 
-            let questionOptions =
-                [
-                    { ques: this.state.friendsUser.qa[0].ques, id: 1 },
-                    { ques: this.state.friendsUser.qa[1].ques, id: 2 },
-                    { ques: this.state.friendsUser.qa[2].ques, id: 3 },
-                    { ques: this.state.friendsUser.qa[3].ques, id: 4 },
-                    { ques: this.state.friendsUser.qa[4].ques, id: 5 },
-                    { ques: this.state.friendsUser.qa[5].ques, id: 6 },
-                    { ques: this.state.friendsUser.qa[6].ques, id: 7 },
-                    { ques: this.state.friendsUser.qa[7].ques, id: 8 },
-                    { ques: this.state.friendsUser.qa[8].ques, id: 9 },
-                    { ques: this.state.friendsUser.qa[9].ques, id: 10 }
-                ];
-    
-            let answerOptions =
-                [
-                    { id: 1, options: this.state.friendsUser.qa[0].options },
-                    { id: 2, options: this.state.friendsUser.qa[1].options },
-                    { id: 3, options: this.state.friendsUser.qa[2].options },
-                    { id: 4, options: this.state.friendsUser.qa[3].options },
-                    { id: 5, options: this.state.friendsUser.qa[4].options },
-                    { id: 6, options: this.state.friendsUser.qa[5].options },
-                    { id: 7, options: this.state.friendsUser.qa[6].options },
-                    { id: 8, options: this.state.friendsUser.qa[7].options },
-                    { id: 9, options: this.state.friendsUser.qa[8].options },
-                    { id: 10, options: this.state.friendsUser.qa[9].options }
-                ];
-    
-            this.setState({
-                questionOptions,
-                answerOptions
-            });
-        }
-        else
-            {
-                this.props.history.push('/');
             }
+        });
+
     }
 
     answerHandler = (event) => {
@@ -102,7 +108,6 @@ export class GetQuizAns extends Component {
                 index,
                 answers
             });
-            console.log(answers)
             if(counter === 10)
             {
                 // Header
@@ -111,25 +116,26 @@ export class GetQuizAns extends Component {
                         "Content-Type": "application/json"
                     }
                 }
-  
                 // Request
                 setTimeout(function(){
                     const body = JSON.stringify(this.state.answers);
-                    axios.post(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`, body, config)
+                    axios.post(`/invite/form/${this.props.uid}/${this.props.fid}`, body, config)
                         .then(res => {
+                            console.log(res.data)
                             if(res.data.msg_id === 0)
                                 this.props.history.push('/');
-                            else if (res.data.msg_id === 1)
+                            else if(res.data.msg_id === 1)
                             {
-                                var user = res.data.user;
-                                localStorage.setItem('user', JSON.stringify(user));   
-                                this.props.history.push('/form');                            
+                                const data = {
+                                    user: res.data.user,
+                                    msg_id: 1
+                                }
+                                this.props.sendId(data);
                             }
-                            else
+                            else if (res.data.msg_id === 2)
                             {
                                 var invresult = res.data.iid;
-                                localStorage.setItem('result', JSON.stringify(invresult));
-                                this.props.history.push(`/invite/results/${this.state.curUser._id}/${this.state.friendsUser._id}/${invresult._id}`);
+                                this.props.history.push(`/invite/results/${this.props.uid}/${this.props.fid}/${invresult._id}`);   
                             }
                         });
                 }.bind(this),500);
@@ -143,7 +149,7 @@ export class GetQuizAns extends Component {
             return (
                 <div>
                     <div className="quizHeader">
-                        <span>{this.state.user}'s Quiz</span>
+                        <span>{this.state.curUser.username}'s Quiz</span>
                     </div>
                     <div className="progressContainer">
                         <div className="progressBar" style={{ width: 10 * this.state.index + "%" }}></div>
@@ -177,11 +183,10 @@ export class GetQuizAns extends Component {
                         <span>Choose an answer!</span>
                     </div>
                 </div>
-            )
-        }
+            )}
         else
             return (<div></div>)
     }
 }
 
-export default GetQuizAns;
+export default withRouter(GetQuizAns);

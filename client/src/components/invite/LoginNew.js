@@ -8,7 +8,7 @@ import { Table } from 'reactstrap';
 export class LoginNew extends Component {
     constructor(props) {
         super(props);
-        const data = JSON.parse(localStorage.getItem('refId'));
+        const data = props.id
         this.state={
             refId: data,
             name: '',
@@ -41,14 +41,25 @@ export class LoginNew extends Component {
                 if(res.data.msg_id === 1)
                 {
                     var curUser= res.data.user;
-                    localStorage.setItem('user', JSON.stringify(user));
-                    this.props.history.push('/form');
+                    const data = {
+                        user: curUser,
+                        msg_id: 1
+                    }
+                    this.props.sendId(data);
+                    //this.props.history.push('/form');
                 }
-                var curUser= res.data.curUser;
-                var friendUser= res.data.friendUser;
-                localStorage.setItem('user', JSON.stringify(curUser));
-                localStorage.setItem('refUser', JSON.stringify(friendUser));
-                this.props.history.push(`/invite/form/${curUser._id}/${friendUser._id}`);
+                else
+                {
+                    var curUser= res.data.curUser;
+                    var friendUser= res.data.friendUser;
+                    const data = {
+                        user: curUser,
+                        frienduser: friendUser,
+                        msg_id: 2
+                    }
+                    this.props.sendId(data);
+                }
+                // this.props.history.push(`/invite/form/${curUser._id}/${friendUser._id}`);
             });
     }
 

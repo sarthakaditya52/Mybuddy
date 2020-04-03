@@ -36,49 +36,56 @@ class YourResult extends Component {
 
     componentWillMount()
     {
-        if(this.state.curUser && this.state.friendUser && this.state.result)
-        {
-            console.log(this.state.result)
-            axios.get(`/invite/results/${this.state.curUser._id}/${this.state.friendUser._id}/${this.state.result._id}`)
-            .then(res => {
-                if(res.data.msg_id === 2)
+        axios.get(`/invite/results/${this.props.uid}/${this.props.fid}/${this.props.iid}`)
+        .then(res => {
+            if(res.data.msg_id === 2)
+            {
+                this.props.history.push(`/invite/form/${this.props.uid}/${this.props.fid}`)
+            }
+            else if (res.data.msg_id === 1)
+            {
+                var user = res.data.user;
+                const data = {
+                    user: res.data.user,
+                    msg_id: 1
+                } 
+                this.props.sendId(data);
+                //this.props.history.push('/form');    
+            }
+            else if (res.data.msg_id === 0)
+                this.props.history.push('/')
+            else
+            {
+                console.log(res.data)
+                let scores = res.data.invites;
+                let newScores = [];
+                for(let i = 0; i < scores.length; i++)
                 {
-                    this.props.history.push(`/invite/form/${this.state.curUser._id}/${this.state.friendUser._id}`)
+                    let score = { name: scores[i].friendname, score: scores[i].score }
+                    newScores.push(score)
                 }
-                else if (res.data.msg_id === 1)
-                {
-                    var user = res.data.user;
-                    localStorage.setItem('user', JSON.stringify(user));   
-                    this.props.history.push('/form');    
-                }
-                else if (res.data.msg_id === 0)
-                    this.props.history.push('/')
-                else
-                {
-                    let scores = res.data.invites;
-                    let newScores = [];
-                    for(let i = 0; i < scores.length; i++)
-                    {
-                        let score = { name: scores[i].friendname, score: scores[i].score }
-                        newScores.push(score)
-                    }
-                    this.setState({
-                        scoreList: newScores
-                    });
-                }
-            })
-        }
-        else
-            this.props.history.push('/')
+                this.setState({
+                    scoreList: newScores,
+                    curUser: res.data.user,
+                    friendUser: res.data.friend,
+                    score: res.data.invite.score
+                });
+            }
+        })
     }
 
     onClick()
     {
-        this.props.history.push(`/form`); 
+        const data = {
+            user: this.state.curUser,
+            msg_id: 1
+        }
+        this.props.sendId(data);
+        // this.props.history.push(`/form`); 
     }
 
     render() {
-        if(this.state.curUser && this.state.friendUser && this.state.result)
+        if(this.state.curUser && this.state.friendUser)
         {
             return (
                 <div>
@@ -134,7 +141,7 @@ class YourResult extends Component {
                             null
                     }
 
-                    <div className="inviteLink">Create Your Quiz</div>
+                    <div className="inviteLink" onClick={this.onClick.bind(this)}>Create Your Quiz</div>
                 </div>
             );
         }

@@ -137,9 +137,24 @@ router.post('/invite/new/:fid', (req, res) => {
 router.get('/invite/form/:uid/:fid', (req, res) => {
     if (req.params.uid == req.params.fid) {
         req.flash("error", "cannot answer your own quiz")
+        User.findOne({ _id: req.params.uid }, (err, fuser) => {
+            if (err) {
+                res.send(err);
+            }
+            else
+            {
+                if(fuser == null)
+                    res.json({ msg_id: 0 });
+                else
+                    {
+                        res.json({ user: fuser, msg_id: 1 })
+
+                    }
+            }
+         });
+
         // res.redirect('/user/'+req.params.uid);
         // console.log("hahah")
-        res.json({ uid: req.params.uid, msg_id: 1 })
     } else {
         if (req.params.fid.match(/^[0-9a-fA-F]{24}$/) && req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
             // Yes, it's a valid ObjectId, proceed with `findById` call.
@@ -164,7 +179,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
                                             } else {
                                                 req.flash("error", "no such invite");
                                                 // res.redirect('/user/form/' + fuser._id);
-                                                res.json({ msg_id: 1 });
+                                                res.json({ user: fuser,msg_id: 1 });
                                             }
                                         }
                                     })
@@ -232,7 +247,8 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                                             // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
                                             //res.json({ uid: fuser._id, fid: ffriend._id, iid: ninvite._id })
                                             res.json({
-                                                iid: ninvite
+                                                iid: ninvite,
+                                                msg_id: 2
                                             });
                                         }
 
