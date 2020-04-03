@@ -18,6 +18,11 @@ body
     text-align: center;
 }
 
+#base
+{
+    min-height: 100vh;
+}
+
 #container
 {
 	max-width: 748px;

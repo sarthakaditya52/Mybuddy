@@ -7,9 +7,9 @@ import { Route, Switch, withRouter, useParams,Redirect } from 'react-router-dom'
 import CreateQuiz from './components/CreateQuiz';
 import LoginNew from './components/invite/LoginNew'
 import GetQuizAns from './components/invite/GetQuizAns';
-import Dashboard from './components/dashboard';
-import YourResult from './components/yourResult';
-
+import Dashboard from './components/Dashboard';
+import YourResult from './components/YourResult';
+import Background from './asserts/icons/background-01.jpg'
 export class App extends Component {
   constructor(props) {
     super(props);
@@ -161,18 +161,27 @@ export class App extends Component {
     )
   }
 
+sectionStyle = {
+  width: "auto",
+  height: "auto",
+  backgroundImage: `url(${Background})`
+};
+
+
   render() {
     return (
       <Switch>
-        <div id="container">
-          <AppNavabr />
-          <Route exact path="/" component={this.LoginPage} />
-          <Route exact path="/form" component={this.CreateQuizPage} />
-          <Route exact path="/user/share/:id" component={this.DashboardPage} />
-          <Route exact path="/invite/:id" component={this.LoginNewPage} />
-          <Route exact path="/invite/form/:uid/:fid" component={this.GetQuizAnsPage} />
-          <Route exact path="/invite/results/:uid/:fid/:iid" component={this.YourResultPage} />
-       </div>
+        <div id="base" style={ this.sectionStyle }>
+          <div id="container">
+            <AppNavabr />
+            <Route exact path="/" component={this.LoginPage} />
+            <Route exact path="/form" component={this.CreateQuizPage} />
+            <Route exact path="/user/share/:id" component={this.DashboardPage} />
+            <Route exact path="/invite/:id" component={this.LoginNewPage} />
+            <Route exact path="/invite/form/:uid/:fid" component={this.GetQuizAnsPage} />
+            <Route exact path="/invite/results/:uid/:fid/:iid" component={this.YourResultPage} />
+          </div>
+        </div>
      </Switch>
     )
   }
