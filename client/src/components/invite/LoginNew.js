@@ -38,6 +38,12 @@ export class LoginNew extends Component {
         const body = JSON.stringify(user);
         axios.post(`/invite/new/${this.state.refId}`,body,config)
             .then(res => {
+                if(res.msg_id === 1)
+                {
+                    var curUser= res.data.user;
+                    localStorage.setItem('user', JSON.stringify(user));
+                    this.props.history.push('/form');
+                }
                 var curUser= res.data.curUser;
                 var friendUser= res.data.friendUser;
                 localStorage.setItem('user', JSON.stringify(curUser));

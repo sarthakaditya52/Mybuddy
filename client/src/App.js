@@ -32,7 +32,6 @@ export class App extends Component {
     if(this.state.userId)
     {
       var localUser = userdata.user;
-      console.log(localUser)
       localStorage.setItem('user', JSON.stringify(localUser));
       this.props.history.push(`/form`);
     }
@@ -79,8 +78,6 @@ export class App extends Component {
           <Route exact path="/invite/form/:uid/:fid" component={GetQuizAns} />
           <Route exact path="/user/share/:id" component={Dashboard} />
           <Route exact path="/invite/results/:uid/:fid/:iid" component={YourResult} />
-          <Route path='*'/>
-          <Redirect from='*' to='/' />
        </div>
      </Switch>
     )
