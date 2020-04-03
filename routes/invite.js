@@ -59,6 +59,7 @@ router.post('/invite/new/:fid', (req, res) => {
             res.send(err);
         } else {
             if (user == null) {
+                console.log("here")
                 const user = {
                     username: req.body.name,
                     email: req.body.email
@@ -98,12 +99,33 @@ router.post('/invite/new/:fid', (req, res) => {
                     }
                 })
             } else {
-                //res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
-                res.json({
-                    msg: "User Already exists",
-                    curUser: user,
-                    friendUser: fuser
-                });
+                if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)) {
+                    // Yes, it's a valid ObjectId, proceed with `findById` call.
+                    User.findOne({ _id: req.params.fid }, (err, fuser) => {
+                        if (err) {
+                            res.send(err);
+                        } else {
+                            if (fuser != null) {
+                                res.json({
+                                    curUser: user,
+                                    friendUser: fuser
+                                });
+                                //res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
+                            } else {
+                                req.flash("error", "no such invitation");
+                                // res.redirect('/user/'+fuser._id);
+                                res.json({ user: user, msg_id: 1 });
+                            }
+                        }
+                    })
+
+                } else {
+                    req.flash("error", "no such invitation");
+                    // res.redirect('/user/'+fuser._id);
+                    res.json({ user: user, msg_id: 1 });
+                }
+
+
             }
         }
     })

@@ -10,12 +10,13 @@ import talkIcon from '../asserts/icons/sms-solid.svg';
 import vkIcon from '../asserts/icons/vk-brands.svg';
 import { Table } from 'reactstrap';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 class Dashboard extends Component {
 
     constructor(props) {
         super(props);
-        const user = JSON.parse(localStorage.getItem('user'));
+        const user = props.user
         if(user)
         {
             this.state = {
@@ -49,33 +50,33 @@ class Dashboard extends Component {
         })
     }
 
-    componentWillMount()
+    componentDidMount()
     {
-        if(this.state.user)
-        {
-            axios.get(`/user/share/${this.state.user._id}`)
-            .then(res => {
-                if (res.data.msg_id === 0)
+
+        axios.get(`/user/share/${this.props.id}`)
+        .then(res => {
+            console.log(res.data)
+            if (res.data.msg_id === 0)
+            {
+                this.props.history.push('/');
+            }
+            else
+            {
+                let scores = res.data.invites;
+                let newScores = [];
+                for(let i = 0; i < scores.length; i++)
                 {
-                  this.props.history.push('/');
+                    let score = { name: scores[i].friendname, score: scores[i].score }
+                    newScores.push(score)
                 }
-                else
-                {
-                    let scores = res.data.invites;
-                    let newScores = [];
-                    for(let i = 0; i < scores.length; i++)
-                    {
-                        let score = { name: scores[i].friendname, score: scores[i].score }
-                        newScores.push(score)
-                    }
-                    this.setState({
-                        scoreList: newScores
-                    });
-                }
-            })
-        }
-        else
-            this.props.history.push('/');
+                this.setState({
+                    user: res.data.user,
+                    link: res.data.user.sharelink,
+                    scoreList: newScores
+                });
+            }
+        })
+
     }
 
     onClick()
@@ -83,14 +84,13 @@ class Dashboard extends Component {
         axios.post(`/user/delete/${this.state.user._id}`)
             .then(res => {
                 var curUser= res.data.user;
-                localStorage.setItem('user', JSON.stringify(curUser));
-                this.props.history.push(`/form`);   
+                const userdata = {
+                    user: curUser,
+                    msg_id: 1
+                }
+                this.props.sendId(userdata);
+                // this.props.history.push(`/form`);   
             });
-    }
-
-    componentDidUpdate()
-    {
-        console.log(this.state)
     }
 
     render() {
@@ -183,4 +183,4 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);
