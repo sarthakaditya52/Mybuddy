@@ -61,6 +61,7 @@ router.get('/user/form/:id',(req,res)=>{
                         // res.render('user/form',{id:fuser._id});
                         res.json({user:fuser});
                     }else{
+                        console.log("hi")
                         // res.redirect('/user/share/'+fuser._id);
                         res.json({user:fuser, msg_id: 1});
                     }
