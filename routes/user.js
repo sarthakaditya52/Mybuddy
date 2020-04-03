@@ -50,69 +50,87 @@ router.post('/user/new',(req,res)=>{
 
 // @route to render form to a user
 router.get('/user/form/:id',(req,res)=>{
-    User.findOne({_id:req.params.id},(err,fuser)=>{
-        if(err){
-            res.send(err);
-        }else{
-            if(fuser!=null){
-                if(fuser.qa.length < 1){
-                    // res.render('user/form',{id:fuser._id});
-                    res.json({user:fuser});
-                }else{
-                    // res.redirect('/user/share/'+fuser._id);
-                    res.json({user:fuser, msg_id: 1});
-                }
-                
+    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({_id:req.params.id},(err,fuser)=>{
+            if(err){
+                res.send(err);
             }else{
-                req.flash("error","please enter details");
-                res.json({msg_id: 0});
+                if(fuser!=null){
+                    if(fuser.qa.length < 1){
+                        // res.render('user/form',{id:fuser._id});
+                        res.json({user:fuser});
+                    }else{
+                        // res.redirect('/user/share/'+fuser._id);
+                        res.json({user:fuser, msg_id: 1});
+                    }
+                    
+                }else{
+                    req.flash("error","please enter details");
+                    res.json({msg_id: 0});
+                }
             }
-        }
-    })
+        })
+      }else{
+        // res.redirect('/');
+      }
+    
 })
 
 // @route to post form data for a user
 router.post('/user/form/:id',(req,res)=>{
-    User.findOne({_id:req.params.id},(err,fuser)=>{
-        if(err){
-            res.send(err);
-        }else{
-            if(fuser!=null){
-                fuser.qa=req.body.qa;
-                fuser.save();
-                // res.redirect('/user/share/'+fuser._id);
-                res.json({
-                    user: fuser
-                });
+    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({_id:req.params.id},(err,fuser)=>{
+            if(err){
+                res.send(err);
             }else{
-                // res.redirect('/');
-                res.json({msg_id: 0});
+                if(fuser!=null){
+                    fuser.qa=req.body.qa;
+                    fuser.save();
+                    // res.redirect('/user/share/'+fuser._id);
+                    res.json({
+                        user: fuser
+                    });
+                }else{
+                    // res.redirect('/');
+                    res.json({msg_id: 0});
+                }
             }
-        }
+        })
+    
+      }else{
+        // res.redirect('/')
+      }
     })
-})
 
 // @share page for user
 router.get('/user/share/:id',(req,res)=>{
-    User.findOne({_id:req.params.id},(err,fuser)=>{
-        if(err){
-            res.send(err);
-        }else{
-            if(fuser!=null){
-                Invite.find({userid:req.params.id},(err,finvites)=>{
-                    if(err){
-                        res.send(err);
-                    }else{
-                        res.json({invites:finvites,user:fuser})
-                        // res.render('share page')
-                    }
-                })
+    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({_id:req.params.id},(err,fuser)=>{
+            if(err){
+                res.send(err);
             }else{
-                // res.redirect('/');
-                res.json({msg_id: 0});
+                if(fuser!=null){
+                    Invite.find({userid:req.params.id},(err,finvites)=>{
+                        if(err){
+                            res.send(err);
+                        }else{
+                            res.json({invites:finvites,user:fuser})
+                            // res.render('share page')
+                        }
+                    })
+                }else{
+                    // res.redirect('/');
+                    res.json({msg_id: 0});
+                }
             }
-        }
-    })
+        })
+      }else{
+        res.redirect('/');
+      }
+    
 })
 // @route to delete quiz and start new quiz
 router.post('/user/delete/:id',(req,res)=>{

@@ -12,35 +12,46 @@ dotenv.config();
 // @route to render invite share page
 router.get('/invite/:fid', (req, res) => {
     console.log("here")
-    User.findOne({ _id: req.params.fid }, (err, fuser) => {
-        if (err) {
-            res.send(err);
-        } else {
-
-            if (fuser != null) {
-                if (fuser.qa == []) {
-                    req.flash("error", "no quiz now");
-                    // res.redirect('/');
-                    res.json({msg_id: 0});
-                } else {
-                    Invite.find({ userid: fuser._id }, (err, finvites) => {
-                        if (err) {
-                            res.send(err);
-                        } else {
-                            // res.render('/invite/new/'+fuser._id);
-                            res.json({ user: fuser, invites: finvites });
-                        }
-                    })
-
-                }
+    if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({ _id: req.params.fid }, (err, fuser) => {
+            if (err) {
+                console.log(err)
+                res.send(err);
 
             } else {
-                req.flash("error", "no such game");
-                // res.redirect('/')
-                res.json({msg_id: 0});
+                console.log("inside findone" + fuser)
+
+                if (fuser != null) {
+                    if (fuser.qa == []) {
+                        req.flash("error", "no quiz now");
+                        // res.redirect('/');
+                        res.json({ msg_id: 0 });
+                    } else {
+                        Invite.find({ userid: fuser._id }, (err, finvites) => {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                // res.render('/invite/new/'+fuser._id);
+                                res.json({ user: fuser, invites: finvites });
+                            }
+                        })
+
+                    }
+
+                } else {
+                    console.log("not found");
+                    req.flash("error", "no such game");
+                    // res.redirect('/')
+                    res.json({ msg_id: 0 });
+                }
             }
-        }
-    })
+        })
+    } else {
+        req.flash("error", "no such game");
+        // res.redirect('/')
+    }
+
 })
 
 // @post route to submit invite index page
@@ -58,26 +69,34 @@ router.post('/invite/new/:fid', (req, res) => {
                     if (err) {
                         res.send(err);
                     } else {
-                        nuser.sharelink="http://gamestickman.herokuapp.com/invite/"+nuser._id;
+                        nuser.sharelink = "http://gamestickman.herokuapp.com/invite/" + nuser._id;
                         nuser.save();
-                        User.findOne({ _id: req.params.fid }, (err, fuser) => {
-                            if (err) {
-                                res.send(err);
-                            } else {
-                                if (fuser != null) {
-                                    console.log("hrere")
-                                    res.json({
-                                        curUser: nuser,
-                                        friendUser: fuser
-                                    });
-                                    //res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
+                        if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)) {
+                            // Yes, it's a valid ObjectId, proceed with `findById` call.
+                            User.findOne({ _id: req.params.fid }, (err, fuser) => {
+                                if (err) {
+                                    res.send(err);
                                 } else {
-                                    req.flash("error", "no such invitation");
-                                    // res.redirect('/user/'+fuser._id);
-                                    res.json({ userid: fuser._id });
+                                    if (fuser != null) {
+                                        console.log("hrere")
+                                        res.json({
+                                            curUser: nuser,
+                                            friendUser: fuser
+                                        });
+                                        //res.redirect('/invite/form/' + nuser._id + '/' + fuser._id);
+                                    } else {
+                                        req.flash("error", "no such invitation");
+                                        // res.redirect('/user/'+fuser._id);
+                                        res.json({ userid: nuser._id });
+                                    }
                                 }
-                            }
-                        })
+                            })
+
+                        } else {
+                            req.flash("error", "no such invitation");
+                            // res.redirect('/user/'+fuser._id);
+                            res.json({ userid: nuser._id });
+                        }
 
                     }
                 })
@@ -95,160 +114,194 @@ router.post('/invite/new/:fid', (req, res) => {
 
 // @route to render invite ques-ans form
 router.get('/invite/form/:uid/:fid', (req, res) => {
-    if(req.params.uid==req.params.fid){
-        req.flash("error","cannot answer your own quiz")
+    if (req.params.uid == req.params.fid) {
+        req.flash("error", "cannot answer your own quiz")
         // res.redirect('/user/'+req.params.uid);
-        res.json({uid:req.params.uid})
-    }else{
-        Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
-            if (err) {
-                res.send(err);
-            } else {
-                if (finvite == null) {
-                    User.findOne({ _id: req.params.uid }, (err, fuser) => {
-                        if (err) {
-                            res.send(err);
-                        } else {
-                            if (fuser != null) {
-    
-                                User.findOne({ _id: req.params.fid }, (err, ffriend) => {
-                                    if (err) {
-                                        res.send(err);
-                                    } else {
-                                        if (ffriend != null) {
-                                            // res.render('invite/form', { user: fuser, friend: ffriend });
-                                            res.json({ user: fuser, friend: ffriend })
-                                        } else {
-                                            req.flash("error", "no such invite");
-                                            // res.redirect('/user/form/' + fuser._id);
-                                            res.json({msg_id: 0});
-                                        }
-                                    }
-                                })
-    
-                            } else {
-                                req.flash("error", "no such account");
-                                // res.redirect('/');
-                                res.json({msg_id: 0});
-                            }
-    
-                        }
-                    })
+        res.json({ uid: req.params.uid })
+    } else {
+        if (req.params.fid.match(/^[0-9a-fA-F]{24}$/) && req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+            // Yes, it's a valid ObjectId, proceed with `findById` call.
+            Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
+                if (err) {
+                    res.send(err);
                 } else {
-                    // res.redirect('/invite/results/' + req.params.uid + "/" + req.params.fid + '/' + finvite._id);
-                    res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite, msg_id: 2 })
+                    if (finvite == null) {
+                        User.findOne({ _id: req.params.uid }, (err, fuser) => {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                if (fuser != null) {
+
+                                    User.findOne({ _id: req.params.fid }, (err, ffriend) => {
+                                        if (err) {
+                                            res.send(err);
+                                        } else {
+                                            if (ffriend != null) {
+                                                // res.render('invite/form', { user: fuser, friend: ffriend });
+                                                res.json({ user: fuser, friend: ffriend })
+                                            } else {
+                                                req.flash("error", "no such invite");
+                                                // res.redirect('/user/form/' + fuser._id);
+                                                res.json({ msg_id: 0 });
+                                            }
+                                        }
+                                    })
+
+                                } else {
+                                    req.flash("error", "no such account");
+                                    // res.redirect('/');
+                                    res.json({ msg_id: 0 });
+                                }
+
+                            }
+                        })
+                    } else {
+                        // res.redirect('/invite/results/' + req.params.uid + "/" + req.params.fid + '/' + finvite._id);
+                        res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite, msg_id: 2 })
+                    }
                 }
-            }
-        })
-    
+            })
+        } else {
+            // res.redirect('/');
+        }
+
+
     }
-    
+
 })
 
 // @post route to submit and compare invite form q-a
 router.post('/invite/form/:uid/:fid', (req, res) => {
-    User.findOne({ _id: req.params.uid }, (err, fuser) => {
-        if (err) {
-            res.send(err);
-        } else {
-            if (fuser != null) {
-                User.findOne({ _id: req.params.fid }, (err, ffriend) => {
-                    if (err) {
-                        res.send(err);
-                    } else {
-                        if (ffriend != null) {
-                            const invite = {
-                                friendname: fuser.username,
-                                friendid: fuser._id,
-                                username: ffriend.username,
-                                userid: ffriend._id
-                            }
-                            Invite.create(invite, (err, ninvite) => {
-                                if (err) {
-                                    res.send(err)
-
-                                } else {
-                                    ninvite.ans = req.body;
-                                    for (var i = 0; i < ffriend.qa.length; i++) {
-                                        ninvite.correctans.push(ffriend.qa[i].ans);
-                                        if (ffriend.qa[i].ans == req.body[i]) {
-                                            ninvite.score = ninvite.score + 1;
-                                        }
-                                    }
-                                    ninvite.save();
-
-                                    // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
-                                    //res.json({ uid: fuser._id, fid: ffriend._id, iid: ninvite._id })
-                                    res.json({
-                                        iid: ninvite
-                                    });
-                                }
-
-                            })
-                        } else {
-                            req.flash("error", "no such invitation");
-                            // res.redirect('/user/form/' + fuser._id);
-                                res.json({msg_id: 0});
-                        }
-                    }
-                })
+    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({ _id: req.params.uid }, (err, fuser) => {
+            if (err) {
+                res.send(err);
             } else {
-                req.flash('error', "no such account");
-                // res.redirect('/');
-                res.json({msg_id: 0});
+                if (fuser != null) {
+                    if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)) {
+                        // Yes, it's a valid ObjectId, proceed with `findById` call.
+                        User.findOne({ _id: req.params.fid }, (err, ffriend) => {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                if (ffriend != null) {
+                                    const invite = {
+                                        friendname: fuser.username,
+                                        friendid: fuser._id,
+                                        username: ffriend.username,
+                                        userid: ffriend._id
+                                    }
+                                    Invite.create(invite, (err, ninvite) => {
+                                        if (err) {
+                                            res.send(err)
+
+                                        } else {
+                                            ninvite.ans = req.body;
+                                            for (var i = 0; i < ffriend.qa.length; i++) {
+                                                ninvite.correctans.push(ffriend.qa[i].ans);
+                                                if (ffriend.qa[i].ans == req.body[i]) {
+                                                    ninvite.score = ninvite.score + 1;
+                                                }
+                                            }
+                                            ninvite.save();
+
+                                            // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
+                                            //res.json({ uid: fuser._id, fid: ffriend._id, iid: ninvite._id })
+                                            res.json({
+                                                iid: ninvite
+                                            });
+                                        }
+
+                                    })
+                                } else {
+                                    req.flash("error", "no such invitation");
+                                    // res.redirect('/user/form/' + fuser._id);
+                                    res.json({ msg_id: 0 });
+                                }
+                            }
+                        })
+                    } else {
+                        req.flash("error", "no such invitation");
+                        // res.redirect('/user/form/' + fuser._id);
+                        req.json({uid:fuser._id})
+                    }
+
+                } else {
+                    req.flash('error', "no such account");
+                    // res.redirect('/');
+                    res.json({ msg_id: 0 });
+                }
             }
-        }
-    })
+        })
+    } else {
+        // res.redirect('/');
+        
+    }
+
 })
 
 // @results route
 router.get('/invite/results/:uid/:fid/:iid', (req, res) => {
-    User.findOne({ _id: req.params.uid }, (err, fuser) => {
-        if (err) {
-            res.send(err);
-        } else {
-            if (fuser != null) {
-                User.findOne({ _id: req.params.fid }, (err, ffriend) => {
-                    if (err) {
-                        res.send(err);
-                    } else {
-                        if (ffriend != null) {
-                            Invite.findOne({ _id: req.params.iid }, (err, finvite) => {
-                                if (err) {
-                                    res.send(err);
-                                } else {
-                                    if (finvite != null) {
-                                        Invite.find({ userid: ffriend._id }, (err, finvites) => {
-                                            if (err) {
-                                                res.send(err);
-                                            } else {
-                                                // res.render('invite/results', { invites: finvites, invite: finvite, user: fuser, friend: ffriend });
-                                                res.json({ invite: finvite, invites: finvites, user: fuser, friend: ffriend });
-                                            }
-
-                                        })
-
-                                    } else {
-                                        req.flash('error', "no such invite");
-                                        // res.redirect('/invite/form/' + fuser._id + '/' + ffriend._id);
-                                        res.json({ uid: fuser._id, fid: ffriend._id, msg_id: 2 })
-                                    }
-                                }
-                            })
-                        } else {
-                            req.flash("error", "no such invitation");
-                            // res.redirect('/user/form/' + fuser._id);
-                            res.json({msg_id: 0});
-                        }
-                    }
-                })
+    if (req.params.uid.match(/^[0-9a-fA-F]{24}$/)) {
+        // Yes, it's a valid ObjectId, proceed with `findById` call.
+        User.findOne({ _id: req.params.uid }, (err, fuser) => {
+            if (err) {
+                res.send(err);
             } else {
-                req.flash('error', "no such account");
-                // res.redirect('/');
-                res.json({msg_id: 0});
+                if (fuser != null) {
+                    if (req.params.fid.match(/^[0-9a-fA-F]{24}$/)){
+                        User.findOne({ _id: req.params.fid }, (err, ffriend) => {
+                            if (err) {
+                                res.send(err);
+                            } else {
+                                if (ffriend != null) {
+                                    Invite.findOne({ _id: req.params.iid }, (err, finvite) => {
+                                        if (err) {
+                                            res.send(err);
+                                        } else {
+                                            if (finvite != null) {
+                                                Invite.find({ userid: ffriend._id }, (err, finvites) => {
+                                                    if (err) {
+                                                        res.send(err);
+                                                    } else {
+                                                        // res.render('invite/results', { invites: finvites, invite: finvite, user: fuser, friend: ffriend });
+                                                        res.json({ invite: finvite, invites: finvites, user: fuser, friend: ffriend });
+                                                    }
+        
+                                                })
+        
+                                            } else {
+                                                req.flash('error', "no such invite");
+                                                // res.redirect('/invite/form/' + fuser._id + '/' + ffriend._id);
+                                                res.json({ uid: fuser._id, fid: ffriend._id, msg_id: 2 })
+                                            }
+                                        }
+                                    })
+                                } else {
+                                    req.flash("error", "no such invitation");
+                                    // res.redirect('/user/form/' + fuser._id);
+                                    res.json({ msg_id: 0 });
+                                }
+                            }
+                        })
+                    }else{
+                        req.flash("error", "no such invitation");
+                        // res.redirect('/user/form/' + fuser._id);
+                    }
+                    
+                } else {
+                    req.flash('error', "no such account");
+                    // res.redirect('/');
+                    res.json({ msg_id: 0 });
+                }
             }
-        }
-    })
+        })
+      }else{
+        req.flash('error', "no such account");
+                    // res.redirect('/');
+      }
+   
 })
 
 module.exports = router;
