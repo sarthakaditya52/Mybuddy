@@ -18,7 +18,8 @@ class YourResult extends Component {
                 result: result,
                 user: curUser.username,
                 score: result.score,
-                scoreList: []
+                scoreList: [],
+                friendtype:""
             }
         }
         else
@@ -29,7 +30,8 @@ class YourResult extends Component {
                 result: result,
                 user: null,
                 score: null,
-                scoreList: []
+                scoreList: [],
+                friendtype:""
             }
         }
     }
@@ -68,7 +70,8 @@ class YourResult extends Component {
                     scoreList: newScores,
                     curUser: res.data.user,
                     friendUser: res.data.friend,
-                    score: res.data.invite.score
+                    score: res.data.invite.score,
+                    friendtype:res.data.invite.friendtype
                 });
             }
         })
@@ -90,6 +93,7 @@ class YourResult extends Component {
             return (
                 <div>
                     <div className="resultQuiz">Excellent, you have scored {this.state.score} in the quiz about {this.state.user}</div>
+                    <div className="resultQuiz">{this.state.friendtype}</div>
 
                     <div className="meterContainer">
                         <div className="dial">
