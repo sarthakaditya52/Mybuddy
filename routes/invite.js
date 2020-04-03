@@ -95,47 +95,54 @@ router.post('/invite/new/:fid', (req, res) => {
 
 // @route to render invite ques-ans form
 router.get('/invite/form/:uid/:fid', (req, res) => {
-    Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
-        if (err) {
-            res.send(err);
-        } else {
-            if (finvite == null) {
-                User.findOne({ _id: req.params.uid }, (err, fuser) => {
-                    if (err) {
-                        res.send(err);
-                    } else {
-                        if (fuser != null) {
-
-                            User.findOne({ _id: req.params.fid }, (err, ffriend) => {
-                                if (err) {
-                                    res.send(err);
-                                } else {
-                                    if (ffriend != null) {
-                                        // res.render('invite/form', { user: fuser, friend: ffriend });
-                                        res.json({ user: fuser, friend: ffriend })
-                                    } else {
-                                        req.flash("error", "no such invite");
-                                        // res.redirect('/user/form/' + fuser._id);
-                                        res.json({msg_id: 0});
-                                    }
-                                }
-                            })
-
-                        } else {
-                            req.flash("error", "no such account");
-                            // res.redirect('/');
-                            res.json({msg_id: 0});
-                        }
-
-                    }
-                })
+    if(req.params.uid==req.params.fid){
+        req.flash("error","cannot answer your own quiz")
+        // res.redirect('/user/'+req.params.uid);
+        res.json({uid:req.params.uid})
+    }else{
+        Invite.findOne({ userid: req.params.fid, friendid: req.params.uid }, (err, finvite) => {
+            if (err) {
+                res.send(err);
             } else {
-                // res.redirect('/invite/results/' + req.params.uid + "/" + req.params.fid + '/' + finvite._id);
-                res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite, msg_id: 2 })
+                if (finvite == null) {
+                    User.findOne({ _id: req.params.uid }, (err, fuser) => {
+                        if (err) {
+                            res.send(err);
+                        } else {
+                            if (fuser != null) {
+    
+                                User.findOne({ _id: req.params.fid }, (err, ffriend) => {
+                                    if (err) {
+                                        res.send(err);
+                                    } else {
+                                        if (ffriend != null) {
+                                            // res.render('invite/form', { user: fuser, friend: ffriend });
+                                            res.json({ user: fuser, friend: ffriend })
+                                        } else {
+                                            req.flash("error", "no such invite");
+                                            // res.redirect('/user/form/' + fuser._id);
+                                            res.json({msg_id: 0});
+                                        }
+                                    }
+                                })
+    
+                            } else {
+                                req.flash("error", "no such account");
+                                // res.redirect('/');
+                                res.json({msg_id: 0});
+                            }
+    
+                        }
+                    })
+                } else {
+                    // res.redirect('/invite/results/' + req.params.uid + "/" + req.params.fid + '/' + finvite._id);
+                    res.json({ uid: req.params.uid, fid: req.params.fid, iid: finvite, msg_id: 2 })
+                }
             }
-        }
-    })
-
+        })
+    
+    }
+    
 })
 
 // @post route to submit and compare invite form q-a
