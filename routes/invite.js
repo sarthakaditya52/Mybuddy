@@ -141,17 +141,15 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
             if (err) {
                 res.send(err);
             }
-            else
-            {
-                if(fuser == null)
+            else {
+                if (fuser == null)
                     res.json({ msg_id: 0 });
-                else
-                    {
-                        res.json({ user: fuser, msg_id: 1 })
+                else {
+                    res.json({ user: fuser, msg_id: 1 })
 
-                    }
+                }
             }
-         });
+        });
 
         // res.redirect('/user/'+req.params.uid);
         // console.log("hahah")
@@ -179,7 +177,7 @@ router.get('/invite/form/:uid/:fid', (req, res) => {
                                             } else {
                                                 req.flash("error", "no such invite");
                                                 // res.redirect('/user/form/' + fuser._id);
-                                                res.json({ user: fuser,msg_id: 1 });
+                                                res.json({ user: fuser, msg_id: 1 });
                                             }
                                         }
                                     })
@@ -242,6 +240,31 @@ router.post('/invite/form/:uid/:fid', (req, res) => {
                                                     ninvite.score = ninvite.score + 1;
                                                 }
                                             }
+                                            if (ninvite.score == 10) {
+                                                ninvite.friendtype = "Soul Bond";
+                                            } else if (ninvite.score == 9) {
+                                                ninvite.friendtype = "Best Friend";
+                                            }
+                                            else if (ninvite.score == 8) {
+                                                ninvite.friendtype = "Partner-in-crime";
+                                            } else if (ninvite.score == 7) {
+                                                ninvite.friendtype = "Close Freind";
+                                            } else if (ninvite.score == 6) {
+                                                ninvite.friendtype = "Friendliest Freind";
+                                            } else if (ninvite.score == 5) {
+                                                ninvite.friendtype = "Reliable Companion";
+                                            }else if (ninvite.score == 4) {
+                                                ninvite.friendtype = "Casual Friend";
+                                            } 
+                                            else if (ninvite.score == 3) {
+                                                ninvite.friendtype = "Media Buddy";
+                                            } else if (ninvite.score == 2) {
+                                                ninvite.friendtype = "A Faint Acquaintance";
+                                            } else if (ninvite.score == 1) {
+                                                friendtype = "More than a stranger";
+                                            } else {
+                                                ninvite.friendtype = "Let's Catch up";
+                                            } 
                                             ninvite.save();
 
                                             // res.redirect('/invite/results/' + fuser._id + '/' + ffriend._id + '/' + ninvite._id);
