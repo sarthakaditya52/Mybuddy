@@ -38,7 +38,7 @@ export class LoginNew extends Component {
         const body = JSON.stringify(user);
         axios.post(`/invite/new/${this.state.refId}`,body,config)
             .then(res => {
-                if(res.msg_id === 1)
+                if(res.data.msg_id === 1)
                 {
                     var curUser= res.data.user;
                     localStorage.setItem('user', JSON.stringify(user));
@@ -58,8 +58,11 @@ export class LoginNew extends Component {
         {
             axios.get(`/invite/${this.state.refId}`)
                 .then(res => {
-                    if(res.msg_id === 0)
-                        this.props.history.push('/');
+
+                    if(res.data.msg_id === 0)
+                        {
+                            this.props.history.push('/');
+                        }
                     else
                     {
                         let scores = res.data.invites;

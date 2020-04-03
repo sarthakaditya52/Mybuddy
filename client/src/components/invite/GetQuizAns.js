@@ -39,11 +39,11 @@ export class GetQuizAns extends Component {
         {
             axios.get(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`)
                 .then(res => {
-                    if(res.msg_id === 0)
+                    if(res.data.msg_id === 0)
                         this.props.history.push('/');
-                    if(res.msg_id === 1)
+                    if(res.data.msg_id === 1)
                         this.props.history.push('/form');
-                    else if (res.msg_id === 2)
+                    else if (res.data.msg_id === 2)
                     {
                         var invresult = res.data.iid;
                         localStorage.setItem('result', JSON.stringify(invresult));
@@ -117,7 +117,7 @@ export class GetQuizAns extends Component {
                     const body = JSON.stringify(this.state.answers);
                     axios.post(`/invite/form/${this.state.curUser._id}/${this.state.friendsUser._id}`, body, config)
                         .then(res => {
-                            if(res.msg_id === 0)
+                            if(res.data.msg_id === 0)
                                 this.props.history.push('/');
                             else if (res.data.msg_id === 1)
                             {
